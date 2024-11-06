@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <title>Generate Use Case Diagram</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'style/use_case_diagram/Styles.css' %}">
     <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
     <style>
         /* Ensure the body can scroll */
@@ -37,119 +37,142 @@
             <img src="{% static 'asset/gologo.png' %}" alt="Logo">
         </div>
         <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
-                Pages
-            </a>
-            <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown"
-                    style="display: none;">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
+                    Pages
+                </a>
+                <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
                     <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
                     <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
                     <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a>
-                    </li></ul>
-                    </li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">My Projects</a></li>
-            </ul>
+                    <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">My Projects</a></li>
+        </ul>
         <div class="user-icon">
-                        <i class="fas fa-user"></i>
+            <i class="fas fa-user"></i>
         </div>
     </nav>
 </header>
 
-    <div class="container" >
-
-        <main class="main">
-            <div class="arrow-icon">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <section class="form-section">
-                <div class="container">
-                    <h1><span>Generate</span> Use Case Diagram</h1>
-                    <form id="use-case-form" action="{% url 'use_case_result' %}" method="post">
-                        {% csrf_token %}
-                        <div id="actor-container">
-                            <div class="actor-group d-flex mt-3">
-                                <div class="actor-column" style="flex: 1;">
-                                    <input type="text" id="actor1" name="actor1" class="form-control"
-                                        placeholder="Actor 1" required>
-                                </div>
-                                <div class="feature-column" style="flex: 1;" data-actor="1">
-                                    <div class="feature-field">
-                                        <input type="text" id="feature1_1" name="feature1_1" class="form-control"
-                                            placeholder="Feature 1" required>
-                                    </div>
-                                    <button type="button" class="btn btn-secondary mt-2 add-feature" data-actor="1">+
-                                        Add Feature</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-primary mt-2" id="add-actor">+ Add Actor</button>
-                        <button type="button" class="btn btn-success mt-2" id="save-button">Save</button>
-
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="include-extend">Include or Extend</label>
-                                <select id="include-extend" name="include-extend" class="form-select">
-                                    <option value="Include">Include</option>
-                                    <option value="Extend">Extend</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="feature-start">Feature Start</label>
-                                <select id="feature-start" name="feature-start" class="form-select">
-                                    {% for feature in features %}
-                                    <option value="{{ feature }}">{{ feature }}</option>
-                                    {% endfor %}
-                                </select>
-
-                                <label for="feature-end">Feature End</label>
-                                <select id="feature-end" name="feature-end" class="form-select">
-                                    {% for feature in features %}
-                                    <option value="{{ feature }}">{{ feature }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-generate mt-4">Generate Use Case Diagram</button>
-                    </form>
-                </div>
-            </section>
-        </main>
+<main class="main">
+    <div class="arrow-icon">
+        <i class="fas fa-arrow-left"></i>
     </div>
+    <section class="form-section">
+        <div class="container">
+            <h1><span>Generate</span> Use Case Diagram</h1>
+            <form id="use-case-form" action="{% url 'use_case_result' %}" method="post">
+                {% csrf_token %}
+                <div id="actor-container">
+                    <div class="actor-group d-flex mt-3">
+                        <div class="actor-column" style="flex: 1;">
+                            <input type="text" id="actor1" name="actor1" class="form-control" placeholder="Actor 1" required>
+                        </div>
+                        <div class="feature-column" style="flex: 1;" data-actor="1">
+                            <div class="feature-field">
+                                <input type="text" id="feature1_1" name="feature1_1" class="form-control" placeholder="Feature 1" required>
+                            </div>
+                            <button type="button" class="btn btn-secondary mt-2 add-feature" data-actor="1">+ Add Feature</button>
+                        </div>
+                    </div>
+                </div>
 
-    <script src="{% static 'JS/main.js' %}" ></script>
-    <script> document.getElementById('save-button').addEventListener('click', function (e) {
-    e.preventDefault();
+                <button type="button" class="btn btn-primary mt-2" id="add-actor">+ Add Actor</button>
+                <button type="button" class="btn btn-success mt-2" id="save-button">Save</button>
 
-    const formData = new FormData(document.getElementById('use-case-form'));
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    formData.append('csrfmiddlewaretoken', csrfToken);
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="include-extend">Include or Extend</label>
+                        <select id="include-extend" name="include-extend" class="form-select">
+                            <option value="Include">Include</option>
+                            <option value="Extend">Extend</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="feature-start">Feature Start</label>
+                        <select id="feature-start" name="feature-start" class="form-select">
+                            {% for feature in features %}
+                            <option value="{{ feature }}">{{ feature }}</option>
+                            {% endfor %}
+                        </select>
 
-    fetch("{% url 'use_case_result' %}", {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-        .then(response => response.json())
+                        <label for="feature-end">Feature End</label>
+                        <select id="feature-end" name="feature-end" class="form-select">
+                            {% for feature in features %}
+                            <option value="{{ feature }}">{{ feature }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-generate mt-4">Generate Use Case Diagram</button>
+            </form>
+        </div>
+    </section>
+</main>
+</div>
+
+<script src="{% static 'JS/main.js' %}"></script>
+<script>
+    document.getElementById('save-button').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById('use-case-form'));
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        fetch("{% url 'use_case_result' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log(data); // Log response
             if (data.status === 'success') {
                 alert(data.message);
+                updateFeatureDropdowns(data.features);
             } else {
-                alert('Failed to save data.');
+                alert('Failed to save data: ' + data.message);
             }
         })
         .catch(error => console.error('Error:', error));
     });
-    </script>
-    <script src="{% static 'JS/navbar.js' %}" ></script>
-</body>
 
+    function updateFeatureDropdowns(features) {
+        const featureStartSelect = document.getElementById('feature-start');
+        const featureEndSelect = document.getElementById('feature-end');
+
+        // Clear existing options
+        featureStartSelect.innerHTML = '';
+        featureEndSelect.innerHTML = '';
+
+        // Add new options
+        features.forEach(feature => {
+            const optionStart = document.createElement('option');
+            optionStart.value = feature;
+            optionStart.textContent = feature;
+            featureStartSelect.appendChild(optionStart);
+
+            const optionEnd = document.createElement('option');
+            optionEnd.value = feature;
+            optionEnd.textContent = feature;
+            featureEndSelect.appendChild(optionEnd);
+        });
+    }
+</script>
+<script src="{% static 'JS/navbar.js' %}"></script>
+</body>
 </html>

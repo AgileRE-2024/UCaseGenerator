@@ -1,0 +1,118 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F1DEC6;
+    color: #333;
+    margin: 0;
+    /* padding: 20px; */
+}
+
+.main {
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.arrow-icon {
+    position: absolute;
+    /* Atau relative tergantung kebutuhan */
+    left: 100px;
+    /* Jarak dari kiri */
+    font-size: 32px;
+    top: 120px;
+}
+
+.dropdown-menu {
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+
+.form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: #F1DEC6;
+}
+
+.container {
+    background-color: #F1DEC6;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); */
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+h1 span {
+    color: #E98325;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 25px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    font-size: 1rem;
+}
+
+.btn-generate {
+    background-color: #E98325;
+    color: white;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.btn-generate {
+    background-color: #E98325;
+    color: white;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    /* Tambahkan transisi halus */
+}
+
+
+.btn-generate:hover {
+    background-color: #D1721D;
+    /* Ubah warna saat di-hover */
+    transform: scale(1.05);
+    /* Sedikit memperbesar tombol saat di-hover */
+}
+
+.container {
+    margin-top: 30px;
+}

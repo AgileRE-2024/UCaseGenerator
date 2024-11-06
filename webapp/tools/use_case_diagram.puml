@@ -1,0 +1,6 @@
+@startuml
+actor "mahasiswa" as mahasiswa
+mahasiswa --> "mengumpulkan tugas"
+actor "mahasiswa" as mahasiswa
+mahasiswa --> "absensi"
+@enduml
