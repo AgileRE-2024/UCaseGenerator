@@ -56,7 +56,7 @@ ROOT_URLCONF = 'webapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates') ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,7 +124,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Jika menggunakan folder static di root proyek
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "usecase", "static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "webapp", "usecase", "static")]
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

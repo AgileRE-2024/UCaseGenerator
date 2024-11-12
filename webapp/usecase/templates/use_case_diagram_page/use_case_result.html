@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
 </head>
 <body>
-
+    
 <header>
     <nav class="navbar">
         <div class="logo">
@@ -46,19 +46,29 @@
 
     <div class="diagram">
         {% if diagram_path %}
-            <img id="resultImage" src="{% static diagram_path %}" alt="Use Case Diagram" class="img-fluid" />
+            <img id="resultImage" src="{% url 'serve_use_case_diagram' %}" alt="Use Case Diagram" class="img-fluid" />
         {% else %}
             <p class="text-danger">Diagram generation failed. Please check your input or try again.</p>
         {% endif %}
     </div>
+    
 
     <h2 class="specification-title">Generate Use Case Specification</h2>
     <div class="button-group">
+        {% for feature in features %}
+        <button class="btn btn-primary" onclick="window.location.href='{% url 'Specification' %}';">
+                {{ feature }}
+            </button>
+        {% endfor %}
+    </div>
+    
+    
+    {% comment %} <div class="button-group">
         <button class="btn btn-primary">Enroll in University</button>
         <button class="btn btn-primary">Enroll in Seminar</button>
         <button class="btn btn-primary">Perform Security Check</button>
         <button class="btn btn-primary">Enroll Member in University</button>
-    </div>
+    </div>  {% endcomment %}
 
     <h2 class="class-diagram-title">Generate Class Diagram</h2>
     <div class="generate-class-diagram">

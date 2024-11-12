@@ -1,6 +1,10 @@
 @startuml
 actor "mahasiswa" as mahasiswa
-mahasiswa --> "mengumpulkan tugas"
+mahasiswa --> "melakukan presensi"
 actor "mahasiswa" as mahasiswa
-mahasiswa --> "absensi"
+mahasiswa --> "mengumpulkan tugas"
+actor "dosen" as dosen
+dosen --> "memberikan tugas"
+actor "TU" as TU
+TU --> "validasi presensi"
 @enduml
