@@ -59,7 +59,14 @@
                     </tr>
                     <tr>
                         <td>Actor   </td>
-                        <td>    <input type="text" placeholder = "Enter the Actor Name" name="actor">   </td>
+                        <td>
+                            <select name="actor" id="actorSelect">
+                                <option value="" disabled selected>Select an Actor</option>
+                                {% for actor in actors %}
+                                    <option value="{{ actor_id }}" {% if actor_id == new_actor_id %}selected{% endif %}>{{ actor.actor_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <td>Summary Description </td>
@@ -151,8 +158,8 @@
             </form>
         </div>
 
-    <script src="{% static 'JS/script.js' %}"></script>
-    <script src="{% static 'JS/navbar.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
 </body>
 
 </html>

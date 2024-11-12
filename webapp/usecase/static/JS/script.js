@@ -65,6 +65,11 @@ document.getElementById('deleteExceptionRow').addEventListener('click', function
         }
     }
 });
+// Event Listeners untuk tombol tambah baris
+document.getElementById('addBasicStepButton').addEventListener('click', addBasicPathRow);
+document.getElementById('addAlternativeStepButton').addEventListener('click', addAlternativePathRow);
+document.getElementById('addExceptionStepButton').addEventListener('click', addExceptionPathRow);
+
 
 document.getElementById('submitbutton').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -135,9 +140,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-
-// Event Listeners untuk tombol tambah baris
-document.getElementById('addBasicStepButton').addEventListener('click', addBasicPathRow);
-document.getElementById('addAlternativeStepButton').addEventListener('click', addAlternativePathRow);
-document.getElementById('addExceptionStepButton').addEventListener('click', addExceptionPathRow);
+const form = document.getElementById('use-case-form');
+form.addEventListener('submit', function (event) {
+    const actorSelect = document.getElementById('actorSelect');
+    if (!actorSelect.value) {
+        alert('Please select an actor.');
+        event.preventDefault();  // Prevent form submission
+    }
+});
 

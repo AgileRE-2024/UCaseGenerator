@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 from django.conf import settings
-from django.http import FileResponse, Http404, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 
 from .models import ActorFeature, AlternativePath, BasicPath, ExceptionPath, UseCaseSpecification  # Import your ActorFeature model
@@ -179,19 +179,26 @@ def save_specification(request):
     if request.method == 'POST':
         # Ambil data dari form
         use_case_name = request.POST.get('use_case_name')
-        actor_name = request.POST.get('actor')
+        actor_id = request.POST.get('actor')  # Dapatkan ID aktor yang dipilih
         summary_description = request.POST.get('summary_description')
         pre_conditions = request.POST.get('pre_conditions')
         post_conditions = request.POST.get('post_conditions')
 
-        # Buat objek UseCaseSpecification
-        specification = UseCaseSpecification.objects.create(
-            use_case_name=use_case_name,  # Perhatikan bahwa ini adalah use_case_name
-            actor=actor_name,
+        # Jika actor sudah dipilih dari dropdown, ambil actor yang dipilih
+        if actor_id:
+            actor = ActorFeature.objects.get(id=actor_id)
+        else:
+            return HttpResponse("Actor is required", status=400)
+
+        # Simpan Use Case Specification
+        use_case_spec = UseCaseSpecification(
+            use_case_name=use_case_name,
+            actor=actor,  # Simpan objek aktor, bukan hanya nama
             summary_description=summary_description,
             pre_conditions=pre_conditions,
-            post_conditions=post_conditions
+            post_conditions=post_conditions,
         )
+        use_case_spec.save()
 
         # Menyimpan langkah-langkah dalam Basic Path
         basic_actor_steps = request.POST.getlist('basic_actor_step[]')
@@ -199,7 +206,7 @@ def save_specification(request):
         for actor_step, system_step in zip(basic_actor_steps, basic_system_steps):
             if actor_step.strip() or system_step.strip():
                 BasicPath.objects.create(
-                    use_case_specification=specification,
+                    use_case_specification=use_case_spec,
                     basic_actor_step=actor_step,
                     basic_system_step=system_step
                 )
@@ -210,7 +217,7 @@ def save_specification(request):
         for actor_step, system_step in zip(alternative_actor_steps, alternative_system_steps):
             if actor_step.strip() or system_step.strip():
                 AlternativePath.objects.create(
-                    use_case_specification=specification,
+                    use_case_specification=use_case_spec,
                     alternative_actor_step=actor_step,
                     alternative_system_step=system_step
                 )
@@ -221,16 +228,19 @@ def save_specification(request):
         for actor_step, system_step in zip(exception_actor_steps, exception_system_steps):
             if actor_step.strip() or system_step.strip():
                 ExceptionPath.objects.create(
-                    use_case_specification=specification,
+                    use_case_specification=use_case_spec,
                     exception_actor_step=actor_step,
                     exception_system_step=system_step
                 )
 
         return redirect('output_activity')  # Ganti dengan URL yang sesuai
-
-    return render(request, 'use case specification page/Specification.html')  # Ganti dengan template yang sesuai
-
-
+    
+    # Ambil daftar aktor yang telah ada
+    actors = ActorFeature.objects.all()
+    
+    
+    # Kirimkan data actor yang ada
+    return render(request, 'use_case_specification/Specification.html', {'actors': actors})
 
 def output_activity(request):
     return render(request, 'output-activity.html')

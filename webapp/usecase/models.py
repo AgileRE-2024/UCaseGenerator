@@ -34,7 +34,7 @@ class ActorFeature(models.Model):
 class UseCaseSpecification(models.Model):
     specification_id = models.AutoField(primary_key=True)  
     use_case_name = models.CharField(max_length=200)
-    actor = models.CharField(max_length=200)
+    actor = models.ForeignKey(ActorFeature, on_delete=models.CASCADE)
     summary_description = models.TextField()
     pre_conditions = models.TextField()
     post_conditions = models.TextField()
