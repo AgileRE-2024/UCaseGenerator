@@ -37,5 +37,5 @@ urlpatterns = [
     path('outputsequence/', usecase.output_sequence, name='output_sequence'),
     path('use-case-result/', usecase.use_case_result, name='use_case_result'),
     path('serve-use-case-diagram/', usecase.serve_use_case_diagram, name='serve_use_case_diagram'),
-    # path('use_case_output/', usecase_views.use_case_output, name='use_case_output'),  # Pastikan import sesuai
+    path('savespecification/', usecase.save_specification, name='save_specification'),
 ]

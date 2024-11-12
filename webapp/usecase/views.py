@@ -4,9 +4,10 @@ from pathlib import Path
 
 from django.conf import settings
 from django.http import FileResponse, Http404, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
-from .models import ActorFeature  # Import model ActorFeature Anda
+from .models import ActorFeature, AlternativePath, BasicPath, ExceptionPath, UseCaseSpecification  # Import your ActorFeature model
+
 
 
 # View untuk menampilkan file PNG
@@ -173,6 +174,64 @@ def use_case_output(request):
     }
 
     return render(request, 'use_case_diagram_page/use_case_result.html', context)
+
+def save_specification(request):
+    if request.method == 'POST':
+        # Ambil data dari form
+        use_case_name = request.POST.get('use_case_name')
+        actor_name = request.POST.get('actor')
+        summary_description = request.POST.get('summary_description')
+        pre_conditions = request.POST.get('pre_conditions')
+        post_conditions = request.POST.get('post_conditions')
+
+        # Buat objek UseCaseSpecification
+        specification = UseCaseSpecification.objects.create(
+            use_case_name=use_case_name,  # Perhatikan bahwa ini adalah use_case_name
+            actor=actor_name,
+            summary_description=summary_description,
+            pre_conditions=pre_conditions,
+            post_conditions=post_conditions
+        )
+
+        # Menyimpan langkah-langkah dalam Basic Path
+        basic_actor_steps = request.POST.getlist('basic_actor_step[]')
+        basic_system_steps = request.POST.getlist('basic_system_step[]')
+        for actor_step, system_step in zip(basic_actor_steps, basic_system_steps):
+            if actor_step.strip() or system_step.strip():
+                BasicPath.objects.create(
+                    use_case_specification=specification,
+                    basic_actor_step=actor_step,
+                    basic_system_step=system_step
+                )
+
+        # Menyimpan langkah-langkah dalam Alternative Path
+        alternative_actor_steps = request.POST.getlist('alternative_actor_step[]')
+        alternative_system_steps = request.POST.getlist('alternative_system_step[]')
+        for actor_step, system_step in zip(alternative_actor_steps, alternative_system_steps):
+            if actor_step.strip() or system_step.strip():
+                AlternativePath.objects.create(
+                    use_case_specification=specification,
+                    alternative_actor_step=actor_step,
+                    alternative_system_step=system_step
+                )
+
+        # Menyimpan langkah-langkah dalam Exception Path
+        exception_actor_steps = request.POST.getlist('exception_actor_step[]')
+        exception_system_steps = request.POST.getlist('exception_system_step[]')
+        for actor_step, system_step in zip(exception_actor_steps, exception_system_steps):
+            if actor_step.strip() or system_step.strip():
+                ExceptionPath.objects.create(
+                    use_case_specification=specification,
+                    exception_actor_step=actor_step,
+                    exception_system_step=system_step
+                )
+
+        return redirect('output_activity')  # Ganti dengan URL yang sesuai
+
+    return render(request, 'use case specification page/Specification.html')  # Ganti dengan template yang sesuai
+
+
+
 def output_activity(request):
     return render(request, 'output-activity.html')
 

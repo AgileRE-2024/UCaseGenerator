@@ -3,7 +3,7 @@ body {
     background-color: #F1DEC6;
     color: #333;
     margin: 0;
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .arrow-icon {
@@ -13,7 +13,7 @@ body {
     top: 120px;
 }
 
-.container {
+.container-spec {
     border-radius: 2%;
     max-width: 900px;
     margin: auto;
@@ -22,14 +22,14 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.h1-spec {
     margin-top: 50px;
     color: #e98325;
     text-align: center;
     font-weight: bold;
 }
 
-h2 {
+.h2-spec {
     margin-bottom: 20px;
     text-align: center;
     font-weight: bold;
@@ -105,12 +105,12 @@ button {
     margin-bottom: 50px;
 }
 
-#basicDeleteContainer {
+/* #basicDeleteContainer {
     float: right;
     margin-top: 0.5px;
-}
+} */
 
-#alternativeDeleteContainer {
+/* #alternativeDeleteContainer {
     float: right;
     margin-top: 0.5px;
 }
@@ -119,7 +119,7 @@ button {
     float: right;
     margin-top: 0.5px;
     margin-bottom: 10px;
-}
+} */
 
 button:hover {
     background-color: #45a049;
@@ -127,6 +127,7 @@ button:hover {
 
 #basicPathTable {
     margin-top: 30px;
+    margin-bottom: 0px;
 }
 
 #alternativePathTable {
@@ -182,19 +183,6 @@ button:hover {
 
 }
 
-.delete-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.delete-icon {
-    color: rgb(71, 71, 71);
-    cursor: pointer;
-    margin-left: 10px;
-}
-
 /* Ensure the table layout doesn't shrink */
 table {
     width: 100%;
@@ -227,21 +215,18 @@ th {
     /* Teks tetap putih */
 }
 
-.table-container {
+.table-container-spec {
     width: 100%;
 }
 
-.button-row-bottom {
+.button-row-bottom-spec {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    /* Jarak antara tabel dan tombol */
 }
 
 .delete-icon-table {
-    margin-top: 30px;
     display: none;
     cursor: pointer;
-    color: #333;
+    color: #000000;
 }
