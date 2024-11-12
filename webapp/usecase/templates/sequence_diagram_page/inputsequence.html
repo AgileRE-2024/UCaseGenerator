@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title_seq>Sequence Diagram Input</title_seq>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/sequence diagram/sequence.css' %}">
+    <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'asset/gologo.png' %}" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
+                        Pages
+                    </a>
+                    <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
+                        <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">My Projects</a></li>
+            </ul>
+            <div class="user-icon">
+                <i class="fas fa-user"></i>
+            </div>
+        </nav>
+    </header>
+    <div class="title_seq">
+        <h1>Input</h1>
+        <h2>Sequence Diagram</h2>
+    </div>
+    <main>
+        <section class="project-section">
+            <div class="actor-feature-container">
+                <div class="section">
+                    <div class="title_seq">Actor</div>
+                    <div class="static-box">Actor</div>
+                </div>
+                <div class="section">
+                    <div class="title_seq">Feature</div>
+                    <div class="static-box">Feature</div>
+                </div>
+            </div>
+
+            <h2>Sequence Stuff:</h2>
+            <form method="POST" action="{% url 'save_sequence_diagram' %}">
+                {% csrf_token %}
+                <div id="boundary-container">
+                    <div class="form-group">
+                        <label>Boundary:</label>
+                        <input type="text" name="boundary[]" placeholder="Input boundary 1">
+                        <!-- Other inputs... -->
+                    </div>
+                </div>
+                <div id="controller-container">
+                    <div class="form-group">
+                        <label>Controller:</label>
+                        <input type="text" name="controller[]" placeholder="Input controller 1">
+                        <!-- Other inputs... -->
+                    </div>
+                </div>
+                <div id="entity-container">
+                    <div class="form-group">
+                        <label>Entity:</label>
+                        <input type="text" name="entity[]" placeholder="Input entity 1">
+                        <!-- Other inputs... -->
+                    </div>
+                </div>
+                <button type="submit" class="save-button">Save</button>
+            </form>
+
+            <div id="successModal" class="modal">
+                <div class="modal-content">
+                  <span class="close-button">&times;</span>
+                  <p id="modalMessage"></p>
+                </div>
+              </div>
+              
+            
+
+            <h2>Input Basic Path</h2>
+            <div id="basic-path-container">
+                <div class="condition-group">
+                    <div class="form-group">
+                        <label>Path 1</label>
+                        <input type="text" placeholder="Path 1">
+                    </div>
+                    <div class="form-group select-group">
+                        <label>Object Start</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                        <label>Object End</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="add-btn" onclick="addPathSection()">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="save-button-container">
+                <button class="save-button">Save</button>
+            </div>
+
+            <h2>Input Alternative Path</h2>
+            <div id="alternative-path-container">
+                <div class="condition-group">
+                    <h3>Condition 1</h3>
+                    <div class="form-group">
+                        <label>Condition 1</label>
+                        <input type="text" placeholder="Input condition 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Path 1</label>
+                        <input type="text" placeholder="Input path 1">
+                    </div>
+                    <div class="form-group select-group">
+                        <label>Object Start</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                        <label>Object End</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="add-btn" onclick="addAlternativePathSection(this)">+</button>
+                    </div>
+                </div>
+                <div class="save-button-container">
+                    <button class="save-button">Save</button>
+                </div>
+                <div class="condition-group">
+                    <h3>Condition 2</h3>
+                    <div class="form-group">
+                        <label>Condition 2</label>
+                        <input type="text" placeholder="Input condition 2">
+                    </div>
+                    <div class="form-group">
+                        <label>Path 1</label>
+                        <input type="text" placeholder="Input path 1">
+                    </div>
+                    <div class="form-group select-group">
+                        <label>Object Start</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                        <label>Object End</label>
+                        <select>
+                            <option>Choose object</option>
+                        </select>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="add-btn" onclick="addAlternativePathSection(this)">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="save-button-container">
+                <button class="save-button">Save</button>
+            </div>
+            </div>
+
+            <div class="generate-button-container">
+                <button class="generate-button">Generate to Sequence Diagram</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'JS/sequence.js' %}"></script>
+    <script src="{% static 'JS/navbar.js' %}"></script>
+    <script src="{% static 'JS/sequence_diagram.js' %}"></script>
+ 
+</body>
+
+</html>
