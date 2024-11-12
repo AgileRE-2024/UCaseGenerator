@@ -1,4 +1,4 @@
 @startuml
-actor "mahasiswa" as mahasiswa
-mahasiswa --> "login"
+actor "tendik" as tendik
+tendik --> "membuat jadwal ujian"
 @enduml
