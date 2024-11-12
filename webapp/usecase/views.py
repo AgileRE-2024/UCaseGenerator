@@ -235,8 +235,8 @@ def save_specification(request):
 def output_activity(request):
     return render(request, 'output-activity.html')
 
-def input_class(request):
-    return render(request, 'class_diagram_page/inputClass.html')
+def input_class_diagram(request):
+    return render(request, 'class_diagram_page/input_class_diagram.html')
 
 def input_sequence(request):
     return render(request, 'sequence_diagram_page/inputsequence.html')
