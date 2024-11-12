@@ -316,4 +316,3 @@ document.addEventListener("DOMContentLoaded", () => {
     const initialAddConnectionBtn = document.querySelector(".add-connection-btn");
     initialAddConnectionBtn.addEventListener("click", addConnection);
 });
-
