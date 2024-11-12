@@ -5,7 +5,6 @@ function addInputField(containerId, labelText) {
     // Create a new form-group div
     const newDiv = document.createElement('div');
     newDiv.classList.add('form-group');
-
     // Create label
     const label = document.createElement('label');
     label.textContent = `${labelText}:`;
