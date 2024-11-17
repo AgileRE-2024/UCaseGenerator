@@ -62,17 +62,11 @@
         {% endfor %}
     </div>
     
-    
-    {% comment %} <div class="button-group">
-        <button class="btn btn-primary">Enroll in University</button>
-        <button class="btn btn-primary">Enroll in Seminar</button>
-        <button class="btn btn-primary">Perform Security Check</button>
-        <button class="btn btn-primary">Enroll Member in University</button>
-    </div>  {% endcomment %}
-
     <h2 class="class-diagram-title">Generate Class Diagram</h2>
     <div class="generate-class-diagram">
-        <button class="btn btn-success">Generate</button>
+        <button class="btn btn-success" onclick="window.location.href='{% url 'input_class' %}';">
+            Generate
+        </button>
     </div>
 </div>
 

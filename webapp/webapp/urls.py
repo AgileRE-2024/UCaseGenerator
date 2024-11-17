@@ -17,12 +17,7 @@ Including another URLconf
 # from django import views
 from django.contrib import admin
 from django.urls import path
-from graphviz import view
 from usecase import views as usecase
-from usecase import views as usecase_views
-
-# from usecase.views import *
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,11 +26,10 @@ urlpatterns = [
     path('generate_use_case/', usecase.generate_use_case_diagram, name='generate_use_case_diagram'),
     path('specification/', usecase.Specification, name='Specification'),
     path('output-activity/', usecase.output_activity, name='output_activity'),
-    path('inputclass/', usecase.input_class_diagram, name='input_class_diagram'),
+    path('inputclass/', usecase.input_class, name='input_class'),
     path('inputsequence/', usecase.input_sequence, name='input_sequence'),
     path('outputclass/', usecase.output_class, name='output_class'),
     path('outputsequence/', usecase.output_sequence, name='output_sequence'),
-    path('use-case-result/', usecase.use_case_result, name='use_case_result'),
     path('serve-use-case-diagram/', usecase.serve_use_case_diagram, name='serve_use_case_diagram'),
-    path('savespecification/', usecase.save_specification, name='save_specification'),
+    path('save-feature-connection/', usecase.save_feature_connection, name='save_feature_connection'),
 ]
