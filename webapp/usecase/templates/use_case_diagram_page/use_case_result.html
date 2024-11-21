@@ -27,8 +27,8 @@
                 <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
                     <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
                     <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a></li>
+                    <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
+                    <li><a class="dropdown-item" href="{% url 'input_sequence_diagram' %}">Sequence Diagram</a></li>
                 </ul>
             </li>
             <li><a href="#">Blog</a></li>
@@ -64,7 +64,7 @@
     
     <h2 class="class-diagram-title">Generate Class Diagram</h2>
     <div class="generate-class-diagram">
-        <button class="btn btn-success" onclick="window.location.href='{% url 'input_class' %}';">
+        <button class="btn btn-success" onclick="window.location.href='{% url 'input_class_diagram' %}';">
             Generate
         </button>
     </div>

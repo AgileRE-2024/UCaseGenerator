@@ -186,25 +186,16 @@ class Entity(models.Model):
 
 class FeatureConnection(models.Model):
     use_case = models.ForeignKey(
-        UseCase,
-        on_delete=models.CASCADE,
+        UseCase, 
+        on_delete=models.CASCADE, 
         related_name='feature_connections',
         null=True,  # Membuat field opsional
         blank=True  # Membuat field opsional di form
     )
     feature_start = models.CharField(max_length=255)
     feature_end = models.CharField(max_length=255)
+    relation_type = models.CharField(max_length=100, blank=True, null=True)  # Menambahkan kolom relation_type
 
-    def __str__(self):
-        return f"{self.feature_start} -> {self.feature_end}"
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'use_case': self.use_case.id if self.use_case else None,
-            'feature_start': self.feature_start,
-            'feature_end': self.feature_end,
-        }
     def __str__(self):
         return f"{self.feature_start} -> {self.feature_end} ({self.relation_type})"  # Menambahkan relation_type dalam representasi string
     

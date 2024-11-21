@@ -12,7 +12,6 @@ from pyexpat import features
 
 from .models import *
 
-
 # View untuk menampilkan file PNG
 def serve_use_case_diagram(request):
     diagram_path = settings.BASE_DIR / 'tools' / 'use_case_diagram.png'
@@ -143,6 +142,7 @@ def generate_use_case_diagram(actor_data, feature_connections):
             uml_code += f'({feature_start}) .> ({feature_end}) : include\n'
         elif relation == 'extend':
             uml_code += f'({feature_start}) .> ({feature_end}) : extend\n'
+
     uml_code += '@enduml'
 
     # Simpan kode UML dan generate diagram
@@ -174,40 +174,6 @@ def generate_use_case_diagram(actor_data, feature_connections):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return None
-
-    
-def save_feature_connection(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-
-        feature_starts = data.get('feature_starts', [])
-        feature_ends = data.get('feature_ends', [])
-        relation_types = data.get('relation_types', [])  # Ambil relasi baru
-
-        relation_types = data.get('relation_types', [])
-
-        saved_connections = []
-        for start, end, relation in zip(feature_starts, feature_ends, relation_types):
-            if start and end:
-                connection = FeatureConnection.objects.create(
-                    feature_start=start,
-                    feature_end=end,
-                    relation_type=relation  # Simpan relasi di database
-                )
-                saved_connections.append({
-                    'start': connection.feature_start,
-                    'end': connection.feature_end,
-                    'relation': connection.relation_type
-                })
-
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Feature connections saved successfully!',
-            'connections': saved_connections
-        })
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
-
 
 def use_case_output(request):
     # Ambil semua fitur unik dari database
@@ -549,11 +515,45 @@ def input_sequence(request):
     return render(request, 'sequence_diagram/input_sequence_diagram.html')
 
 
+def save_feature_connection(request):
+    if request.method == 'POST':
+        # Parse JSON request body
+        data = json.loads(request.body)
+
+        feature_starts = data.get('feature_starts', [])
+        feature_ends = data.get('feature_ends', [])
+        relation_types = data.get('relation_types', [])  # Ambil relasi baru
+
+        # Proses untuk menyimpan koneksi fitur
+        saved_connections = []
+        for start, end, relation in zip(feature_starts, feature_ends, relation_types):
+            if start and end:
+                connection = FeatureConnection.objects.create(
+                    feature_start=start,
+                    feature_end=end,
+                    relation_type=relation  # Simpan relasi di database
+                )
+                saved_connections.append({
+                    'start': connection.feature_start,
+                    'end': connection.feature_end,
+                    'relation': connection.relation_type
+                })
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Feature connections saved successfully!',
+            'connections': saved_connections
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+
+
 def output_activity(request):
     return render(request, 'output-activity.html')
 
 
-
+def input_class_diagram(request):
+    return render(request, 'class_diagram_page/input_class_diagram.html')
 
 def input_sequence(request):
     return render(request, 'sequence_diagram_page/inputsequence.html')
