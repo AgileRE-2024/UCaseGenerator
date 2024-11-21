@@ -46,8 +46,8 @@
                 <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
                     <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
                     <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a></li>
+                    <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
+                    <li><a class="dropdown-item" href="{% url 'input_sequence_diagram' %}">Sequence Diagram</a></li>
                 </ul>
             </li>
             <li><a href="#">Blog</a></li>
@@ -112,9 +112,7 @@
                 </div>
                 <button type="button" class="btn btn-primary mt-4" id="add-feature-connection">+ Add Feature Connection</button>
                 <button type="button" class="btn btn-primary mt-4" id="save-feature-connection">Save Feature Connection</button>
-
                 <button type="submit" class="btn mt-4" style="background-color: #E98325; color: white;" id="generate-use-case">Generate Use Case Diagram</button>
-
                 
             </form>
             
@@ -164,6 +162,7 @@
         newFeatureConnection.querySelector('#feature-start').value = '';
         newFeatureConnection.querySelector('#feature-end').value = '';
         
+        // Menambahkan tombol delete
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Hapus';
         deleteButton.classList.add('delete-feature-connection');
@@ -181,7 +180,8 @@
     
         // Scroll ke bagian atas halaman atau form
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+    });
+        
     function updateFeatureDropdowns(features) {
         const featureStartSelect = document.getElementById('feature-start');
         const featureEndSelect = document.getElementById('feature-end');
@@ -203,6 +203,7 @@
             featureEndSelect.appendChild(optionEnd);
         });
     }
+    
 
     document.getElementById('save-feature-connection').addEventListener('click', function (e) {
         e.preventDefault();
@@ -212,13 +213,17 @@
         const featureEnds = Array.from(document.querySelectorAll('select[name="feature-end[]"]')).map(el => el.value);
         const relationTypes = Array.from(document.querySelectorAll('select[name="relation-type[]"]')).map(el => el.value);
     
+        console.log('Data yang akan dikirim:', {
+            feature_starts: featureStarts,
+            feature_ends: featureEnds,
+            relation_types: relationTypes
+        });
+    
         // Buat objek data untuk dikirim
         const requestData = {
             feature_starts: featureStarts,
-
             feature_ends: featureEnds,
             relation_types: relationTypes
-
         };
     
         // Kirim data ke server menggunakan fetch
@@ -227,32 +232,30 @@
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
-
             },
             body: JSON.stringify(requestData)
         })
         .then(response => {
+            console.log('Response dari server:', response);  // Log response dari server
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
-          
+            console.log('Data diterima dari server:', data);  // Log data yang diterima
             if (data.status === 'success') {
                 alert(data.message);
             } else {
                 alert('Failed to save data: ' + data.message);
-
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-
+            console.error('Error:', error);  // Log error secara rinci
             alert('An error occurred. Please try again.');
-
         });
     });
+    
 </script>
 <script src="{% static 'JS/navbar.js' %}"></script>
 </body>

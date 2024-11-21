@@ -2,10 +2,19 @@
 left to right direction
 skinparam packageStyle rectangle
 
-actor bbbb
+actor nnnnn
+actor ccccc
 rectangle usecase {
-  (oooo)
+  (vvvvv)
+  (bbbb)
+  (mmmm)
+  (kkk)
 }
 
-bbbb -- (oooo)
+ccccc -- (vvvvv)
+ccccc -- (bbbb)
+nnnnn -- (mmmm)
+nnnnn -- (kkk)
+(vvvvv) .> (bbbb) : include
+(mmmm) .> (kkk) : extend
 @enduml
