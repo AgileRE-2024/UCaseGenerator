@@ -46,7 +46,7 @@
                 <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
                     <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
                     <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
-                    <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
+                    <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
                     <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a></li>
                 </ul>
             </li>
@@ -112,7 +112,9 @@
                 </div>
                 <button type="button" class="btn btn-primary mt-4" id="add-feature-connection">+ Add Feature Connection</button>
                 <button type="button" class="btn btn-primary mt-4" id="save-feature-connection">Save Feature Connection</button>
+
                 <button type="submit" class="btn mt-4" style="background-color: #E98325; color: white;" id="generate-use-case">Generate Use Case Diagram</button>
+
                 
             </form>
             
@@ -162,7 +164,6 @@
         newFeatureConnection.querySelector('#feature-start').value = '';
         newFeatureConnection.querySelector('#feature-end').value = '';
         
-        // Menambahkan tombol delete
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Hapus';
         deleteButton.classList.add('delete-feature-connection');
@@ -180,8 +181,7 @@
     
         // Scroll ke bagian atas halaman atau form
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-        
+      
     function updateFeatureDropdowns(features) {
         const featureStartSelect = document.getElementById('feature-start');
         const featureEndSelect = document.getElementById('feature-end');
@@ -203,7 +203,6 @@
             featureEndSelect.appendChild(optionEnd);
         });
     }
-    
 
     document.getElementById('save-feature-connection').addEventListener('click', function (e) {
         e.preventDefault();
@@ -216,8 +215,10 @@
         // Buat objek data untuk dikirim
         const requestData = {
             feature_starts: featureStarts,
+
             feature_ends: featureEnds,
             relation_types: relationTypes
+
         };
     
         // Kirim data ke server menggunakan fetch
@@ -226,6 +227,7 @@
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
+
             },
             body: JSON.stringify(requestData)
         })
@@ -236,15 +238,19 @@
             return response.json();
         })
         .then(data => {
+          
             if (data.status === 'success') {
                 alert(data.message);
             } else {
                 alert('Failed to save data: ' + data.message);
+
             }
         })
         .catch(error => {
             console.error('Error:', error);
+
             alert('An error occurred. Please try again.');
+
         });
     });
 </script>

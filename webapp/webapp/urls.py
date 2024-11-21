@@ -32,5 +32,7 @@ urlpatterns = [
     path('outputsequence/', usecase.output_sequence, name='output_sequence'),
     path('serve-use-case-diagram/', usecase.serve_use_case_diagram, name='serve_use_case_diagram'),
     path('save-feature-connection/', usecase.save_feature_connection, name='save_feature_connection'),
+    path('generateActivityDiagram/', usecase.generate_activity_diagram, name='generate_activity_diagram'),
     path('savespecification/', usecase.save_specification, name='save_specification'),
+    path('serve-activity-diagram/', usecase.serve_activity_diagram, name='serve_activity_diagram'),
 ]

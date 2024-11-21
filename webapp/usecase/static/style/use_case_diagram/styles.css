@@ -133,11 +133,12 @@ h1 span {
 .delete-feature-connection {
     background-color: #ff4d4d;
     color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 0.5rem 0.5rem;
     margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 /* Efek hover pada tombol delete */
@@ -167,4 +168,37 @@ h1 span {
     left: 100px;  /* Posisi kiri tetap seperti sebelumnya */
     font-size: 32px;
     cursor: pointer;
+=======
+.container {
+    margin-top: 30px;
+}
+
+/* Memberikan jarak antar feature connection */
+.feature-connection {
+    margin-bottom: 15px; /* Menambahkan jarak 15px antar feature connection */
+    padding: 10px; /* Menambahkan padding untuk memberi ruang di dalam elemen */
+    border: 1px solid #ddd; /* Menambahkan border untuk membedakan tiap section */
+    border-radius: 5px; /* Membuat sudut sedikit melengkung */
+    background-color: #f9f9f9; /* Memberikan warna latar belakang yang terang */
+}
+
+/* Mengatur tampilan tombol delete */
+.delete-feature-connection {
+    background-color: #ff4d4d; /* Warna merah untuk tombol hapus */
+    color: white; /* Warna teks putih */
+    border: none; /* Menghilangkan border default */
+    padding: 5px 10px; /* Menambahkan padding untuk ukuran tombol yang nyaman */
+    border-radius: 5px; /* Membuat sudut tombol melengkung */
+    cursor: pointer; /* Menunjukkan pointer ketika hover di atas tombol */
+    margin-top: 10px; /* Memberikan jarak antara dropdown dan tombol hapus */
+}
+
+/* Efek saat tombol delete di-hover */
+.delete-feature-connection:hover {
+    background-color: #e60000; /* Mengubah warna tombol saat hover */
+}
+
+/* Mengatur ukuran dan jarak tombol delete */
+.delete-feature-connection:focus {
+    outline: none; /* Menghilangkan outline default pada tombol saat fokus */
 }

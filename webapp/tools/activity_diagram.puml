@@ -1,0 +1,22 @@
+@startuml
+|Aktor|
+start
+
+|Aktor|
+:kiki;
+|Sistem|
+|Aktor|
+repeat :asdasd;
+|Sistem|
+|Sistem|
+backward :dsa;
+|Sistem|
+|Sistem|
+repeat while (sdsd) is (no)
+
+|Sistem|
+:asd;
+|Aktor|
+:dsadsa;
+stop
+@enduml
