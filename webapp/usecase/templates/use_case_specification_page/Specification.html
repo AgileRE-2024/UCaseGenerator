@@ -46,20 +46,27 @@
         <div class="arrow-icon">
             <i class="fas fa-arrow-left">   </i>
         </div>
-        <h1>Use Case Specification  </h1>
-        <h2>User Input  </h2>
+        <h1 class="h1-spec">Use Case Specification  </h1>
+        <h2 class="h2-spec">User Input  </h2>
 
-        <div class="container">
-            <form method="POST">
+        <div class="container-spec">
+            <form id="use-case-form" action="{% url 'save_specification' %}" method="post">
             {% csrf_token %}
-                <table class="main">
+                <table class="main-spec">
                     <tr>
                         <td>Use Case Name   </td>
                         <td>    <input type="text" placeholder = "Enter the Use Case Name" name="use_case_name">    </td>
                     </tr>
                     <tr>
                         <td>Actor   </td>
-                        <td>    <input type="text" placeholder = "Enter the Actor Name" name="actor">   </td>
+                        <td>
+                            <select name="actor" id="actorSelect">
+                                <option value="" disabled selected>Select an Actor</option>
+                                {% for actor in actors %}
+                                    <option value="{{ actor_id }}" {% if actor_id == new_actor_id %}selected{% endif %}>{{ actor.actor_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <td>Summary Description </td>
@@ -76,7 +83,7 @@
                 </table>
 
                 <!-- Container untuk Basic Path -->
-                <div class="table-container">
+                <div class="table-container-spec-spec">
                     <table id="basicPathTable">
                         <tr>
                             <th>    </th>
@@ -85,71 +92,74 @@
                         </tr>
                         <tr>
                             <td>Basic Path  </td>
-                            <td>    <textarea name="actor_step[]" rows="2"> </textarea>  </td>
-                            <td>    <textarea name="system_step[]" rows="2">    </textarea> </td>
+                            <td>    <textarea name="basic_actor_step[]" rows="2"> </textarea>  </td>
+                            <td>    <textarea name="basic_system_step[]" rows="2">    </textarea> </td>
                         </tr>
                     </table>
                     <!-- Baris tombol di bawah tabel -->
-                    <div class="button-row-bottom">
+                    <div class="button-row-bottom-spec">
                         <a type="button" id="addBasicStepButton">   <i class='bx bxs-plus-circle'> </i> Add Step    </a>
-                        <i class="fas fa-trash delete-icon-table" id="deleteBasicRow">  </i>
+                        <i class="fas fa-trash delete-icon-table " id="deleteBasicRow">  </i>
                     </div>
                 </div>
 
 
                 <!-- Container untuk Alternative Path -->
-                <div class="table-container">
+                <div class="table-container-spec">
                     <table id="alternativePathTable">
                         <tr>
-                            <th>    </th>
-                            <td>Actor   </td>
-                            <td>System  </td>
+                            <th></th>
+                            <td>Actor</td>
+                            <td>System</td>
                         </tr>
                         <tr>
-                            <td>Alternative Path    </td>
-                            <td>    <textarea name="actor_step[]" rows="2"> </textarea>  </td>
-                            <td>    <textarea name="system_step[]" rows="2">    </textarea> </td>
+                            <td>Alternative Path</td>
+                            <td><textarea name="alternative_actor_step[]" rows="2"></textarea></td>
+                            <td><textarea name="alternative_system_step[]" rows="2"></textarea></td>
                         </tr>
                     </table>
-                    <div class="button-row-bottom">
-                        <a type="button" id="addAlternativeStepButton"> <i class='bx bxs-plus-circle'>   </i> Add Step  </a>
-                        <i class="fas fa-trash delete-icon-table" id="deleteAlternativeRow">    </i>
+                    <div class="button-row-bottom-spec">
+                        <a type="button" id="addAlternativeStepButton"> <i class='bx bxs-plus-circle'></i> Add Step  </a>
+                        <i class="fas fa-trash delete-icon-table" id="deleteAlternativeRow"></i>
                     </div>
                 </div>
 
                 <!-- Container untuk Exception Path -->
-                <div class="table-container">
+                <div class="table-container-spec">
                     <table id="exceptionPathTable">
                         <tr>
-                            <th>    </th>
-                            <td>Actor   </td>
-                            <td>System  </td>
+                            <th></th>
+                            <td>Actor</td>
+                            <td>System</td>
                         </tr>
                         <tr>
                             <td>Exception Path  </td>
-                            <td>    <textarea name="actor_step[]" rows="2"> </textarea>  </td>
-                            <td>    <textarea name="system_step[]" rows="2">    </textarea> </td>
+                            <td><textarea name="exception_actor_step[]" rows="2"></textarea></td>
+                            <td><textarea name="exception_system_step[]" rows="2"></textarea></td>
                         </tr>
                     </table>
-                    <div class="button-row-bottom">
-                        <a type="button" id="addExceptionStepButton">   <i class='bx bxs-plus-circle'> </i> Add Step    </a>
-                        <i class="fas fa-trash delete-icon-table" id="deleteExceptionRow">  </i>
+                    <div class="button-row-bottom-spec">
+                        <a type="button" id="addExceptionStepButton"><i class='bx bxs-plus-circle'></i>Add Step</a>
+                        <i class="fas fa-trash delete-icon-table" id="deleteExceptionRow"></i>
                     </div>
                 </div>
 
 
 
-                <div class="button-container">
+                <div class="button-container-spec">
                     <div class="output-button-container d-flex justify-content-start mt-auto">
-                        <a href="{% url 'output_activity' %}" class="btn btn-primary me-2">Generate Activity Diagram    </a>
-                        <a href="" class="btn btn-primary">Generate Sequence Diagram    </a>
+                        <button type="submit" class="btn btn-primary me-2" id="submitButton">Generate Activity Diagram</button>
                     </div>
+                </div>
+
+
+
                 </div>
             </form>
         </div>
 
-    <script src="{% static 'JS/script.js' %}"></script>
-    <script src="{% static 'JS/navbar.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
 </body>
 
 </html>

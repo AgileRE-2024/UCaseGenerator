@@ -19,10 +19,10 @@ function addInputField(containerId, labelText) {
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.classList.add('delete-btn');
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Tombol sampah dengan ikon
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; 
     deleteButton.onclick = () => {
         container.removeChild(newDiv);
-        updateLabels(container, labelText); // Update labels after deletion
+        updateLabels(container, labelText); 
     };
 
     // Append label, input, and delete button to newDiv
@@ -95,7 +95,7 @@ function addPathSection() {
 function deletePathSection(button) {
     const pathSection = button.closest('.condition-group');
     pathSection.parentNode.removeChild(pathSection);
-    updatePathLabels(); // Update labels after deletion
+    updatePathLabels(); 
 }
 
 // Function to update path labels
@@ -119,7 +119,7 @@ function addAlternativePathSection(button) {
 
     // Count existing paths in the related conditionGroup
     const existingPaths = conditionGroup.querySelectorAll('.alternative-path');
-    const pathCount = existingPaths.length + 2; // Start from Path 2
+    const pathCount = existingPaths.length + 2; 
 
     // Create a new div for the added path
     const newPathSection = document.createElement('div');
@@ -147,10 +147,10 @@ function addAlternativePathSection(button) {
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.classList.add('delete-btn');
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Trash icon
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; 
     deleteButton.onclick = () => {
         conditionGroup.removeChild(newPathSection);
-        updateAltPathLabels(conditionGroup); // Update labels after deletion
+        updateAltPathLabels(conditionGroup); 
     };
 
     // Append delete button to the new path section
@@ -172,7 +172,7 @@ function updateAltPathLabels(conditionGroup) {
         const input = path.querySelector('input');
 
         // Update label text and input placeholder based on the current index
-        label.textContent = `Path ${index + 2}`; // Start numbering from 2
+        label.textContent = `Path ${index + 2}`; 
         input.placeholder = `Input path ${index + 2}`;
     });
 }
