@@ -1,10 +1,11 @@
 @startuml
-actor "mahasiswa" as mahasiswa
-mahasiswa --> "melakukan presensi"
-actor "mahasiswa" as mahasiswa
-mahasiswa --> "mengumpulkan tugas"
-actor "dosen" as dosen
-dosen --> "memberikan tugas"
-actor "TU" as TU
-TU --> "validasi presensi"
+left to right direction
+skinparam packageStyle rectangle
+
+actor bbbb
+rectangle usecase {
+  (oooo)
+}
+
+bbbb -- (oooo)
 @enduml
