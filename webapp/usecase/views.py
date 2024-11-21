@@ -2,15 +2,15 @@ import json
 import os
 import subprocess
 from pathlib import Path
+from typing import Sequence
 
 from django.conf import settings
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
 from pyexpat import features
 
-from .models import ActorFeature  # Import your ActorFeature model
-from .models import (AlternativePath, BasicPath, ExceptionPath,
-                     FeatureConnection, UseCase, UseCaseSpecification)
+from .models import *
 
 
 # View untuk menampilkan file PNG
@@ -143,7 +143,6 @@ def generate_use_case_diagram(actor_data, feature_connections):
             uml_code += f'({feature_start}) .> ({feature_end}) : include\n'
         elif relation == 'extend':
             uml_code += f'({feature_start}) .> ({feature_end}) : extend\n'
-
     uml_code += '@enduml'
 
     # Simpan kode UML dan generate diagram
@@ -175,17 +174,18 @@ def generate_use_case_diagram(actor_data, feature_connections):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return None
+
     
 def save_feature_connection(request):
     if request.method == 'POST':
-        # Parse JSON request body
         data = json.loads(request.body)
 
         feature_starts = data.get('feature_starts', [])
         feature_ends = data.get('feature_ends', [])
         relation_types = data.get('relation_types', [])  # Ambil relasi baru
 
-        # Proses untuk menyimpan koneksi fitur
+        relation_types = data.get('relation_types', [])
+
         saved_connections = []
         for start, end, relation in zip(feature_starts, feature_ends, relation_types):
             if start and end:
@@ -455,29 +455,104 @@ def use_case_output(request):
     # Ambil semua fitur unik dari database
     features = ActorFeature.objects.values_list('feature_name', flat=True).distinct()
 
-    context = {
-        'features': features,
-    }
 
-    return render(request, 'use_case_diagram_page/use_case_result.html', context)
+@csrf_exempt
+def input_sequence(request):
+    if request.method == 'POST':
+        # Ambil ID actor dari POST data
+        actor_id = request.POST.get('actor_id')
+
+        if not actor_id:
+            return JsonResponse({'status': 'fail', 'message': 'actor_id tidak ditemukan dalam request.'})
+
+        # Cek apakah actor_id ada di database
+        try:
+            actor = ActorFeature.objects.get(id=actor_id)
+            actor_name = actor.actor_name  # Mengambil nama aktor dari data yang diambil
+        except ActorFeature.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': f'Aktor dengan id {actor_id} tidak ditemukan.'})
+
+        # Ambil data lain dari POST request
+        boundary_name = request.POST.get('boundary')
+        controller_name = request.POST.get('controller')
+        entity_name = request.POST.get('entity')
+        basic_path = request.POST.get('basic_path')
+        alternative_path = request.POST.get('alternative_path')
+
+        # Simpan data ke SequenceStuff jika belum ada
+        sequence_stuff, created = SequenceStuff.objects.get_or_create(name=actor_name)
+
+        # Simpan data ke Sequence
+        if boundary_name and controller_name and entity_name:
+            sequence = Sequence.objects.create(
+                sequence_stuff=sequence_stuff,  # Hubungkan dengan SequenceStuff
+                boundary=boundary_name,
+                controller=controller_name,
+                entity=entity_name,
+                basic_path=basic_path,
+                alternative_path=alternative_path
+            )
+
+        # Bangun konten untuk diagram PlantUML
+        uml_content = f"""@startuml
+        actor {actor_name}
+        boundary {boundary_name}
+        controller {controller_name}
+        entity {entity_name}
+        """
+
+        # Menambahkan basic path jika ada
+        if basic_path:
+            uml_content += f"{actor_name} -> {boundary_name} : {basic_path}\n"
+            uml_content += f"{boundary_name} -> {controller_name} : Langkah 2\n"
+            uml_content += f"{controller_name} -> {entity_name} : Langkah 3\n"
+
+        # Menambahkan alternative path jika ada
+        if alternative_path:
+            uml_content += f"alt {alternative_path}\n"
+            uml_content += f"{controller_name} -> {actor_name} : {alternative_path}\n"
+            uml_content += "end\n"
+
+        # Menutup diagram
+        uml_content += "@enduml"
+
+        # Tentukan path untuk menyimpan file UML di folder txt di static
+        txt_folder_path = os.path.join(settings.BASE_DIR, 'static', 'txt')
+        os.makedirs(txt_folder_path, exist_ok=True)
+        uml_file_path = os.path.join(txt_folder_path, 'uml_sequence.txt')
+
+        # Simpan file UML
+        with open(uml_file_path, 'w') as f:
+            f.write(uml_content)
+
+        # Proses generate diagram menggunakan PlantUML
+        try:
+            plantuml_path = os.path.join(settings.BASE_DIR, 'tools', 'plantuml-mit-1.2024.7.jar')
+            output_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'generated_sequence_diagram.png')
+            subprocess.run(['java', '-jar', plantuml_path, uml_file_path, '-o', os.path.dirname(output_path)], check=True)
+
+            # Gambar berhasil dihasilkan
+            diagram_url = f'/static/images/generated_sequence_diagram.png'
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Sequence diagram berhasil dihasilkan!',
+                'diagram_url': diagram_url
+            })
+
+        except Exception as e:
+            return JsonResponse({
+                'status': 'fail',
+                'message': f'Gagal menghasilkan diagram: {str(e)}'
+            })
+
+    return render(request, 'sequence_diagram/input_sequence_diagram.html')
 
 
-def output_activity(request, specification_id):
-    # Generate diagram berdasarkan specification_id
-    diagram_path = generate_activity_diagram(specification_id)
-
-    if diagram_path:
-        # Tampilkan diagram yang dihasilkan
-        context = {'diagram_path': str(Path(diagram_path).relative_to(settings.BASE_DIR))}
-        return render(request, 'output-activity.html', context)
-    else:
-        # Jika gagal, tampilkan pesan error
-        return HttpResponse("Failed to generate activity diagram.")
+def output_activity(request):
+    return render(request, 'output-activity.html')
 
 
-
-def input_class(request):
-    return render(request, 'class_diagram_page/inputClass.html')
 
 
 def input_sequence(request):

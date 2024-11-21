@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>Sequence Diagram Result</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/sequence_diagram/styler.css' %}">
+    <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <!-- Navigation code here (same as use case page) -->
+    </nav>
+</header>
+
+<div class="container">
+    <h1 class="header">Sequence Diagram</h1>
+    <p class="sub-header">Result</p>
+
+    <div class="diagram">
+        {% if diagram_path %}
+            <img id="resultImage" src="{% url 'generate_sequence' %}" alt="Sequence Diagram" class="img-fluid" />
+        {% else %}
+            <p class="text-danger">Diagram generation failed. Please check your input or try again.</p>
+        {% endif %}
+    </div>
+
+    <!-- Sequence Diagram Input Form -->
+    <h2>Generate Sequence Diagram</h2>
+    <form id="sequence-form" method="POST" action="{% url 'generate_sequence_diagram' %}">
+        {% csrf_token %}
+        <!-- Input fields for Boundary, Controller, Entity, and Paths (as in original form) -->
+        
+        <div class="generate-button-container">
+            <button type="submit" class="btn btn-success">Generate Sequence Diagram</button>
+        </div>
+    </form>
+</div>
+
+<script src="{% static 'JS/navbar.js' %}"></script>
+</body>
+</html>
