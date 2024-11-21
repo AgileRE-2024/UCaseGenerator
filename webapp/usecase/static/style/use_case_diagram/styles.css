@@ -1,32 +1,28 @@
-/* * {
+/* Reset default margin dan padding */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-} */
+}
 
-
+/* Styling untuk body */
 body {
     font-family: Arial, sans-serif;
     background-color: #F1DEC6;
     color: #333;
     margin: 0;
-    /* padding: 20px; */
+    padding-top: 50px; /* Memberikan jarak pada bagian atas halaman */
 }
 
+/* Styling untuk bagian utama */
 .main {
     margin-top: 50px;
     padding: 20px;
+    height: auto;  /* Sesuaikan agar konten dapat di-scroll */
+    overflow-y: auto;  /* Memungkinkan konten untuk di-scroll */
 }
 
-.arrow-icon {
-    position: absolute;
-    /* Atau relative tergantung kebutuhan */
-    left: 100px;
-    /* Jarak dari kiri */
-    font-size: 32px;
-    top: 120px;
-}
-
+/* Menyembunyikan dan menampilkan dropdown */
 .dropdown-menu {
     display: none;
 }
@@ -35,23 +31,26 @@ body {
     display: block;
 }
 
-
+/* Styling untuk form */
 .form-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: auto;  /* Sesuaikan agar form tetap terlihat */
+    min-height: 80vh;
     background-color: #F1DEC6;
 }
 
+/* Kontainer untuk form */
 .container {
     background-color: #F1DEC6;
     padding: 2rem 3rem;
     border-radius: 10px;
-    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); */
     text-align: center;
+    margin-top: 30px; /* Memberikan jarak antar form */
 }
 
+/* Heading */
 h1 {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
@@ -62,6 +61,7 @@ h1 span {
     color: #E98325;
 }
 
+/* Styling untuk form-group */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -77,11 +77,10 @@ h1 span {
     padding: 0.8rem;
     border: none;
     border-radius: 25px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     font-size: 1rem;
 }
 
-
+/* Tombol Generate */
 .btn-generate {
     background-color: #E98325;
     color: white;
@@ -92,47 +91,80 @@ h1 span {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    /* Tambahkan transisi halus */
 }
 
-
+/* Efek hover pada tombol generate */
 .btn-generate:hover {
     background-color: #D1721D;
-    /* Ubah warna saat di-hover */
     transform: scale(1.05);
-    /* Sedikit memperbesar tombol saat di-hover */
 }
 
-.container {
-    margin-top: 30px;
+/* Kontainer untuk feature connection */
+#feature-connection-container {
+    max-height: 400px;  /* Atur tinggi maksimal sesuai kebutuhan */
+    overflow-y: auto;   /* Menambahkan scroll hanya pada bagian ini */
+    padding-right: 10px; /* Memberikan jarak di sebelah kanan jika ada scrollbar */
 }
 
-/* Memberikan jarak antar feature connection */
+/* Menambahkan scroll pada feature connection */
+#feature-connection-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#feature-connection-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+#feature-connection-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Styling untuk setiap feature connection */
 .feature-connection {
-    margin-bottom: 15px; /* Menambahkan jarak 15px antar feature connection */
-    padding: 10px; /* Menambahkan padding untuk memberi ruang di dalam elemen */
-    border: 1px solid #ddd; /* Menambahkan border untuk membedakan tiap section */
-    border-radius: 5px; /* Membuat sudut sedikit melengkung */
-    background-color: #f9f9f9; /* Memberikan warna latar belakang yang terang */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-/* Mengatur tampilan tombol delete */
+/* Tombol delete untuk feature connection */
 .delete-feature-connection {
-    background-color: #ff4d4d; /* Warna merah untuk tombol hapus */
-    color: white; /* Warna teks putih */
-    border: none; /* Menghilangkan border default */
-    padding: 5px 10px; /* Menambahkan padding untuk ukuran tombol yang nyaman */
-    border-radius: 5px; /* Membuat sudut tombol melengkung */
-    cursor: pointer; /* Menunjukkan pointer ketika hover di atas tombol */
-    margin-top: 10px; /* Memberikan jarak antara dropdown dan tombol hapus */
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-/* Efek saat tombol delete di-hover */
+/* Efek hover pada tombol delete */
 .delete-feature-connection:hover {
-    background-color: #e60000; /* Mengubah warna tombol saat hover */
+    background-color: #e60000;
 }
 
-/* Mengatur ukuran dan jarak tombol delete */
+/* Menghilangkan outline saat tombol delete difokuskan */
 .delete-feature-connection:focus {
-    outline: none; /* Menghilangkan outline default pada tombol saat fokus */
+    outline: none;
+}
+
+/* Menambahkan jarak antar tombol dan feature connection */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Mengatur jarak antar feature connection */
+.feature-connection + .feature-connection {
+    margin-top: 20px;
+}
+
+/* Styling untuk tombol arrow */
+.arrow-icon {
+    position: absolute;
+    top: 120px;  /* Atur jarak dari atas sesuai kebutuhan */
+    left: 100px;  /* Posisi kiri tetap seperti sebelumnya */
+    font-size: 32px;
+    cursor: pointer;
 }

@@ -101,11 +101,18 @@
                                 <option value="{{ feature }}">{{ feature }}</option>
                             {% endfor %}
                         </select>
+                    
+                        <label for="relation-type">Relation Type</label>
+                        <select id="relation-type" name="relation-type[]" class="form-select">
+                            <option value="none">None</option>
+                            <option value="include">Include</option>
+                            <option value="extend">Extend</option>
+                        </select>
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary mt-4" id="add-feature-connection">+ Add Feature Connection</button>
                 <button type="button" class="btn btn-primary mt-4" id="save-feature-connection">Save Feature Connection</button>
-                <button type="submit" class="btn btn-primary mt-4">Generate Use Case Diagram</button>
+                <button type="submit" class="btn mt-4" style="background-color: #E98325; color: white;" id="generate-use-case">Generate Use Case Diagram</button>
                 
             </form>
             
@@ -155,7 +162,7 @@
         newFeatureConnection.querySelector('#feature-start').value = '';
         newFeatureConnection.querySelector('#feature-end').value = '';
         
-        // Membuat tombol delete
+        // Menambahkan tombol delete
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Hapus';
         deleteButton.classList.add('delete-feature-connection');
@@ -170,41 +177,53 @@
         
         // Menambahkan bagian feature connection baru ke dalam container
         featureConnectionContainer.appendChild(newFeatureConnection);
-    });
     
+        // Scroll ke bagian atas halaman atau form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+        
     function updateFeatureDropdowns(features) {
         const featureStartSelect = document.getElementById('feature-start');
         const featureEndSelect = document.getElementById('feature-end');
-
+    
         // Clear existing options
         featureStartSelect.innerHTML = '';
         featureEndSelect.innerHTML = '';
-
+    
         // Add new options
         features.forEach(feature => {
             const optionStart = document.createElement('option');
             optionStart.value = feature;
             optionStart.textContent = feature;
             featureStartSelect.appendChild(optionStart);
-
+    
             const optionEnd = document.createElement('option');
             optionEnd.value = feature;
             optionEnd.textContent = feature;
             featureEndSelect.appendChild(optionEnd);
         });
     }
+    
 
     document.getElementById('save-feature-connection').addEventListener('click', function (e) {
-        e.preventDefault(); // Mencegah form untuk melakukan submit default
+        e.preventDefault();
     
-        // Ambil data dari form (feature-start dan feature-end)
+        // Ambil data dari form (feature-start, feature-end, dan relation-type)
         const featureStarts = Array.from(document.querySelectorAll('select[name="feature-start[]"]')).map(el => el.value);
         const featureEnds = Array.from(document.querySelectorAll('select[name="feature-end[]"]')).map(el => el.value);
+        const relationTypes = Array.from(document.querySelectorAll('select[name="relation-type[]"]')).map(el => el.value);
+    
+        console.log('Data yang akan dikirim:', {
+            feature_starts: featureStarts,
+            feature_ends: featureEnds,
+            relation_types: relationTypes
+        });
     
         // Buat objek data untuk dikirim
         const requestData = {
             feature_starts: featureStarts,
-            feature_ends: featureEnds
+            feature_ends: featureEnds,
+            relation_types: relationTypes
         };
     
         // Kirim data ke server menggunakan fetch
@@ -212,30 +231,31 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'  // Pastikan token CSRF tersedia
+                'X-CSRFToken': '{{ csrf_token }}'
             },
             body: JSON.stringify(requestData)
         })
         .then(response => {
+            console.log('Response dari server:', response);  // Log response dari server
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
-            console.log(data); // Log response untuk debugging
+            console.log('Data diterima dari server:', data);  // Log data yang diterima
             if (data.status === 'success') {
-                // Tampilkan pesan sukses dalam bentuk pop-up atau div
-                alert(data.message);  // Menampilkan pesan sukses
+                alert(data.message);
             } else {
-                alert('Failed to save data: ' + data.message);  // Menampilkan pesan gagal
+                alert('Failed to save data: ' + data.message);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');  // Menampilkan pesan error jika terjadi kesalahan
+            console.error('Error:', error);  // Log error secara rinci
+            alert('An error occurred. Please try again.');
         });
     });
+    
 </script>
 <script src="{% static 'JS/navbar.js' %}"></script>
 </body>

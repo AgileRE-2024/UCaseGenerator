@@ -1,4 +1,20 @@
 @startuml
-actor "tendik" as tendik
-tendik --> "membuat jadwal ujian"
+left to right direction
+skinparam packageStyle rectangle
+
+actor nnnnn
+actor ccccc
+rectangle usecase {
+  (vvvvv)
+  (bbbb)
+  (mmmm)
+  (kkk)
+}
+
+ccccc -- (vvvvv)
+ccccc -- (bbbb)
+nnnnn -- (mmmm)
+nnnnn -- (kkk)
+(vvvvv) .> (bbbb) : include
+(mmmm) .> (kkk) : extend
 @enduml
