@@ -9,26 +9,55 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Output Activity Diagram</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style/activity diagram/activity.css' %}">
+    <link rel="stylesheet" href="{% static 'style/activity_diagram/activity.css' %}">
     <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
 
 </head>
 
 <body>
     <header>
-        {% include 'navbar.html' %}
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'asset/gologo.png' %}" alt="Logo">
+            </div>
+            <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
+                    Pages
+                </a>
+                <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown"
+                        style="display: none;">
+                        <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_class' %}">Class Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_sequence' %}">Sequence Diagram</a>
+                        </li></ul>
+                        </li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">My Projects</a></li>
+                </ul>
+            <div class="user-icon">
+                            <i class="fas fa-user"></i>
+            </div>
     </header>
 
 <div class="container"> 
     <div class="arrow-icon">
         <i class="fas fa-arrow-left"></i>
     </div>
-    <h1>Generated</h1>
-    <h2>Activity Diagram</h2>
+    <h1 class="h1_spec">Generated</h1>
+    <h2 class="h2_spec">Activity Diagram</h2>
 
-    <div class="output activity">
+    <div class="output_activity">
         <div class="center-image">
-            <img src="{% static 'asset/output-activity.jpg' %}" alt="Activity Diagram">
+            {% if diagram_path %}
+            <img id="resultImage" src="{% url 'serve_activity_diagram' %}" alt="Activity Diagram" class="img-fluid" />
+            {% else %}
+                <p class="text-danger">Diagram generation failed. Please check your input or try again.</p>
+            {% endif %}
+
         </div>
     </div>
 </div>
