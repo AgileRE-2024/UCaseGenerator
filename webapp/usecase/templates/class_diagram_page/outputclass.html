@@ -15,35 +15,33 @@
   <!-- Navbar -->
   <header>
     <nav class="navbar">
-      <div class="logo">
-        <img src="{% static 'asset/gologo.png' %}" alt="Logo">
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
-            Pages
-          </a>
-          <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
-            <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
-            <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
-            <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
-            <li><a class="dropdown-item" href="{% url 'input_sequence_diagram' %}">Sequence Diagram</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">My Projects</a></li>
-      </ul>
-      <div class="user-icon">
-        <i class="fas fa-user"></i>
-      </div>
-    </nav>
+            <div class="logo">
+                <img src="{% static 'asset/gologo.png' %}" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">Pages</a>
+                    <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
+                        <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
+                        <li><a class="dropdown-item" href="{% url 'input_sequence_diagram' %}">Sequence Diagram</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">My Projects</a></li>
+            </ul>
+            <div class="user-icon">
+                <i class="fas fa-user"></i>
+            </div>
+        </nav>
   </header>
 
   <!-- Main Content -->
   <main>
-    <h1>Generated <span>Sequence Diagram</span></h1>
+    <h1>Generated <span>Class Diagram</span></h1>
 
     <div>
         {% if diagram_url %}
@@ -53,8 +51,9 @@
         {% endif %}
 
     </div>
-    <a href="{% url 'input_sequence_diagram' %}">Back to Input</a>
+    <a href="{% url 'input_sequence_diagram' %}">go to Sequence diagram</a>
   </main>
+  <script src="{% static 'JS/navbar.js' %}"></script>
 </body>
 
 </html>
