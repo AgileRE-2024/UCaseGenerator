@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Sequence Diagram</title>
+  <link rel="stylesheet" href="{% static 'style/class_diagram/output_class.css' %}">
+  <link rel="stylesheet" href="{% static 'style/navbar.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="{% static 'asset/gologo.png' %}" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button">
+            Pages
+          </a>
+          <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="pagesDropdown" style="display: none;">
+            <li><a class="dropdown-item" href="{% url 'UseCaseDiagram' %}">Use Case Diagram</a></li>
+            <li><a class="dropdown-item" href="{% url 'Specification' %}">Use Case Specification</a></li>
+            <li><a class="dropdown-item" href="{% url 'input_class_diagram' %}">Class Diagram</a></li>
+            <li><a class="dropdown-item" href="{% url 'input_sequence_diagram' %}">Sequence Diagram</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">My Projects</a></li>
+      </ul>
+      <div class="user-icon">
+        <i class="fas fa-user"></i>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Generated <span>Sequence Diagram</span></h1>
+
+    <div>
+        {% if diagram_url %}
+            <img src="{{ diagram_url }}" alt="Class Diagram">
+        {% else %}
+            <p>Diagram not found or failed to generate.</p>
+        {% endif %}
+
+    </div>
+    <a href="{% url 'input_sequence_diagram' %}">Back to Input</a>
+  </main>
+</body>
+
+</html>
