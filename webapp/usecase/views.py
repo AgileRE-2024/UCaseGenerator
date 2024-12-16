@@ -8,7 +8,7 @@ from pyclbr import Class
 from sqlite3 import Connection
 import subprocess
 from pathlib import Path
-from typing import Sequence
+from typing import OrderedDict, Sequence
 
 from django.conf import settings
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
@@ -18,7 +18,6 @@ from django.views.decorators.csrf import csrf_exempt
 from pyexpat import features
 
 from .models import *
-
 # View untuk menampilkan file PNG
 def serve_use_case_diagram(request):
     diagram_path = settings.BASE_DIR / 'tools' / 'use_case_diagram.png'
@@ -28,96 +27,85 @@ def serve_use_case_diagram(request):
     else:
         raise Http404("Diagram not found.")
 
-
-def UseCaseDiagram(request):
-    # Kosongkan fitur saat GET request (awal membuka halaman)
-    features = []
-
-    # Jika ada POST request untuk menyimpan data, ambil fitur dari database
-    if request.method == "POST":
-        features = list(ActorFeature.objects.values_list('feature_name', flat=True).distinct())
-        print("Features available after POST:", features)  # Log untuk debugging
-
-    context = {
-        'features': features,
-        'nama': 'hello world',
-    }
-    print("Context features:", context['features'])  # Log untuk debugging
-    return render(request, 'use_case_diagram_page/UseCaseDiagram.html', context)
-
 def use_case_result(request):
     if request.method == 'POST':
         actor_data = []
         features = []
         feature_connections = []
 
-        # Proses input aktor dan fitur
-        for key, value in request.POST.items():
-            if 'actor' in key and value:  # Ambil data aktor
-                actor_id = key.replace('actor', '')
-                current_features = [
-                    request.POST.get(f'feature{actor_id}_{i}')
-                    for i in range(1, 10)
-                    if request.POST.get(f'feature{actor_id}_{i}')
-                ]
-                for feature in current_features:
-                    ActorFeature.objects.create(actor_name=value, feature_name=feature)
-                    actor_data.append((value, feature))
-                    features.append(feature)
+        try:
+            # Proses input aktor dan fitur
+            for key, value in request.POST.items():
+                if 'actor' in key and value:  # Ambil data aktor
+                    actor_id = key.replace('actor', '')
+                    current_features = [
+                        request.POST.get(f'feature{actor_id}_{i}')
+                        for i in range(1, 10)
+                        if request.POST.get(f'feature{actor_id}_{i}')
+                    ]
+                    for feature in current_features:
+                        ActorFeature.objects.create(actor_name=value, feature_name=feature)
+                        actor_data.append((value, feature))
+                        features.append(feature)
 
-        # Proses relasi antar fitur
-        feature_start_list = request.POST.getlist('feature-start[]')
-        feature_end_list = request.POST.getlist('feature-end[]')
-        relation_type_list = request.POST.getlist('relation-type[]')
+            # Hilangkan duplikat fitur sambil menjaga urutan
+            unique_features = list(OrderedDict.fromkeys(features))
 
-        for start, end, relation in zip(feature_start_list, feature_end_list, relation_type_list):
-            if start and end:
-                connection = FeatureConnection.objects.create(
-                    feature_start=start,
-                    feature_end=end,
-                    relation_type=relation
-                )
-                feature_connections.append({
-                    'feature_start': connection.feature_start,
-                    'feature_end': connection.feature_end,
-                    'relation_type': connection.relation_type,
+            # Proses relasi antar fitur
+            feature_start_list = request.POST.getlist('feature-start[]')
+            feature_end_list = request.POST.getlist('feature-end[]')
+            relation_type_list = request.POST.getlist('relation-type[]')
+
+            for start, end, relation in zip(feature_start_list, feature_end_list, relation_type_list):
+                if start and end:
+                    connection = FeatureConnection.objects.create(
+                        feature_start=start,
+                        feature_end=end,
+                        relation_type=relation
+                    )
+                    feature_connections.append({
+                        'feature_start': connection.feature_start,
+                        'feature_end': connection.feature_end,
+                        'relation_type': connection.relation_type,
+                    })
+
+            # Generate diagram dengan PlantUML
+            diagram_path = generate_use_case_diagram(actor_data, feature_connections)
+
+            # Menangani path diagram relatif
+            if diagram_path:
+                diagram_path = Path(diagram_path)
+                if isinstance(settings.BASE_DIR, str):
+                    settings.BASE_DIR = Path(settings.BASE_DIR)
+                diagram_path = str(diagram_path.relative_to(settings.BASE_DIR))
+            else:
+                diagram_path = None
+
+            # Menangani AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Data Berhasil Disimpan!',
+                    'diagram_path': diagram_path,
+                    'features': unique_features,
+                    'feature_connections': feature_connections,
                 })
 
-        # Generate diagram dengan PlantUML
-        diagram_path = generate_use_case_diagram(actor_data, feature_connections)
-
-        # Menangani path diagram relatif
-        if diagram_path:
-            # Pastikan diagram_path adalah objek Path
-            diagram_path = Path(diagram_path)
-            # Pastikan settings.BASE_DIR adalah objek Path
-            if isinstance(settings.BASE_DIR, str):
-                settings.BASE_DIR = Path(settings.BASE_DIR)
-            diagram_path = str(diagram_path.relative_to(settings.BASE_DIR))
-        else:
-            diagram_path = None
-
-        # Menangani AJAX request (misalnya jika menggunakan JS untuk mengupdate tanpa reload)
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Data Berhasil Disimpan!',
+            # Render hasil diagram ke template
+            context = {
+                'actor_data': actor_data,
                 'diagram_path': diagram_path,
-                'features': features,
+                'features': unique_features,
                 'feature_connections': feature_connections,
-            })
+            }
+            return render(request, 'use_case_diagram_page/use_case_result.html', context)
 
-        # Render hasil diagram ke template
-        context = {
-            'actor_data': actor_data,
-            'diagram_path': diagram_path,
-            'features': features,
-            'feature_connections': feature_connections,
-        }
-        return render(request, 'use_case_diagram_page/use_case_result.html', context)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
 
     # Jika request bukan POST, tampilkan halaman default
     return render(request, 'use_case_diagram_page/use_case_result.html', {'nama': 'hello world'})
+
 
 # Fungsi untuk menghasilkan diagram PlantUML
 def generate_use_case_diagram(actor_data, feature_connections):
@@ -181,6 +169,56 @@ def generate_use_case_diagram(actor_data, feature_connections):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return None
+    
+def UseCaseDiagram(request):
+    # Kosongkan fitur saat GET request (awal membuka halaman)
+    features = []
+
+    # Jika ada POST request untuk menyimpan data, ambil fitur dari database
+    if request.method == "POST":
+        features = list(ActorFeature.objects.values_list('feature_name', flat=True).distinct())
+        print("Features available after POST:", features)  # Log untuk debugging
+
+    context = {
+        'features': features,
+        'nama': 'hello world',
+    }
+    print("Context features:", context['features'])  # Log untuk debugging
+    return render(request, 'use_case_diagram_page/UseCaseDiagram.html', context)
+
+
+def save_feature_connection(request):
+    if request.method == 'POST':
+        # Parse JSON request body
+        data = json.loads(request.body)
+
+        feature_starts = data.get('feature_starts', [])
+        feature_ends = data.get('feature_ends', [])
+        relation_types = data.get('relation_types', [])  # Ambil relasi baru
+
+        # Proses untuk menyimpan koneksi fitur
+        saved_connections = []
+        for start, end, relation in zip(feature_starts, feature_ends, relation_types):
+            if start and end:
+                connection = FeatureConnection.objects.create(
+                    feature_start=start,
+                    feature_end=end,
+                    relation_type=relation  # Simpan relasi di database
+                )
+                saved_connections.append({
+                    'start': connection.feature_start,
+                    'end': connection.feature_end,
+                    'relation': connection.relation_type
+                })
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Feature connections saved successfully!',
+            'connections': saved_connections
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+
 
 def use_case_output(request):
     # Ambil semua fitur unik dari database
@@ -191,9 +229,6 @@ def use_case_output(request):
     }
 
     return render(request, 'use_case_diagram_page/use_case_result.html', context)
-
-
-
 
 
 # --------------------------------------------------------------------------------------SPECIFICATION-------------------------------------------------------------------------------------------------
