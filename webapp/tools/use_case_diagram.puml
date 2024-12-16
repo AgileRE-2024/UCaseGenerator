@@ -2,19 +2,22 @@
 left to right direction
 skinparam packageStyle rectangle
 
-actor nnnnn
-actor ccccc
+actor dosen
+actor mahasiswa
 rectangle usecase {
-  (vvvvv)
-  (bbbb)
-  (mmmm)
-  (kkk)
+  (login)
+  (register)
+  (upload tugas)
+  (login)
+  (upload materi)
 }
 
-ccccc -- (vvvvv)
-ccccc -- (bbbb)
-nnnnn -- (mmmm)
-nnnnn -- (kkk)
-(vvvvv) .> (bbbb) : include
-(mmmm) .> (kkk) : extend
+mahasiswa -- (login)
+mahasiswa -- (register)
+mahasiswa -- (upload tugas)
+dosen -- (login)
+dosen -- (upload materi)
+(register) .> (login) : extend
+(login) .> (upload tugas) : include
+(login) .> (upload materi) : include
 @enduml

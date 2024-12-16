@@ -253,3 +253,27 @@ label {
 .delete-connection-btn:hover {
     color: #FF4D4D;
 }
+
+.relation-reverse select {
+    display: inline-block;
+    width: 100%;
+}
+
+
+.save-connection-btn {
+    background-color: #FF8533;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.save-connection-btn:hover {
+    background-color: #FF9E59;
+}

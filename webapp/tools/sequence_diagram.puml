@@ -1,0 +1,14 @@
+@startuml
+actor mahasiswa
+boundary halaman_login
+control login_cont
+entity user_database
+mahasiswa -> halaman_login : masuk
+halaman_login -> login_cont : isi
+login_cont -> user_database : cek
+alt salah
+user_database -> login_cont : pesan_kesalahan
+else kirim ulang
+login_cont -> halaman_login : kirim_data_ulang
+end
+@enduml

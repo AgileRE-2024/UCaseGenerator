@@ -3,20 +3,20 @@
 start
 
 |Aktor|
-:kiki;
+:masuk;
 |Sistem|
 |Aktor|
-repeat :asdasd;
+repeat :isi;
 |Sistem|
 |Sistem|
-backward :dsa;
+backward :salah;
 |Sistem|
 |Sistem|
-repeat while (sdsd) is (no)
+repeat while (cek) is (no)
 
 |Sistem|
-:asd;
+:benar;
 |Aktor|
-:dsadsa;
+:login;
 stop
 @enduml
