@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fungsi untuk mendapatkan semua objek dari kategori input yang ada
     function getObjectOptions() {
         const objects = [];
-        
+
         // Dapatkan semua elemen input yang ada di container yang relevan
         document.querySelectorAll('#actor-container input, #boundary-container input, #controller-container input, #entity-container input').forEach(input => {
             if (input.value) objects.push(input.value);
@@ -12,36 +12,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Fungsi untuk mengisi dropdown dengan opsi objek
-    function populateDropdown(dropdownId) {
-        const dropdown = document.getElementById(dropdownId);
+    function populateDropdownsInContainer(container) {
         const objects = getObjectOptions();
-        
-        // Kosongkan dropdown sebelumnya
-        dropdown.innerHTML = '<option>Pilih objek</option>';
-        
-        // Tambahkan opsi baru ke dropdown
-        objects.forEach(object => {
-            const option = document.createElement('option');
-            option.textContent = object;
-            option.value = object;
-            dropdown.appendChild(option);
+
+        // Cari semua dropdown di dalam container tertentu
+        container.querySelectorAll('select').forEach(dropdown => {
+            // Kosongkan dropdown sebelumnya
+            dropdown.innerHTML = '<option>Pilih objek</option>';
+
+            // Tambahkan opsi baru ke dropdown
+            objects.forEach(object => {
+                const option = document.createElement('option');
+                option.textContent = object;
+                option.value = object;
+                dropdown.appendChild(option);
+            });
         });
     }
 
-    // Fungsi untuk memperbarui semua dropdown saat input berubah
+    // Perbarui semua dropdown termasuk dropdown dinamis
     function updateAllDropdowns() {
-        populateDropdown('object-start-basic-path');
-        populateDropdown('object-end-basic-path');
-        populateDropdown('object-start-alternative-path');
-        populateDropdown('object-end-alternative-path');
-        populateDropdown('object-start-alternative-path-2');
-        populateDropdown('object-end-alternative-path-2');
+        const containers = document.querySelectorAll('#basic-path-container, #alternative-path-container');
+        containers.forEach(container => populateDropdownsInContainer(container));
     }
+
 
     // Pasang event listener untuk setiap input yang ada saat ini
     function attachInputListeners() {
         const inputs = document.querySelectorAll('#actor-container input, #boundary-container input, #controller-container input, #entity-container input');
-        
+
         inputs.forEach(input => {
             input.addEventListener('input', updateAllDropdowns);
         });

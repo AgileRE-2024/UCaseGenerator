@@ -1,13 +1,11 @@
-// Fungsi untuk menambahkan dan menghapus baris di Basic Path
 function addBasicPathRow() {
     const table = document.getElementById('basicPathTable');
     const row = table.insertRow();
 
     row.insertCell(0).innerHTML = '';
-    row.insertCell(1).innerHTML = '<textarea name="actor_step" rows="2"></textarea>';
-    row.insertCell(2).innerHTML = '<textarea name="system_step" rows="2"></textarea>';
+    row.insertCell(1).innerHTML = '<textarea name="basic_actor_step[]" rows="2"></textarea>';
+    row.insertCell(2).innerHTML = '<textarea name="basic_system_step[]" rows="2"></textarea>';
 
-    // Tampilkan ikon delete
     document.getElementById('deleteBasicRow').style.display = 'inline-block';
 }
 
@@ -16,8 +14,8 @@ function addAlternativePathRow() {
     const row = table.insertRow();
 
     row.insertCell(0).innerHTML = '';
-    row.insertCell(1).innerHTML = '<textarea name="actor_step" rows="2"></textarea>';
-    row.insertCell(2).innerHTML = '<textarea name="system_step" rows="2"></textarea>';
+    row.insertCell(1).innerHTML = '<textarea name="alternative_actor_step[]" rows="2"></textarea>';
+    row.insertCell(2).innerHTML = '<textarea name="alternative_system_step[]" rows="2"></textarea>';
 
     document.getElementById('deleteAlternativeRow').style.display = 'inline-block';
 }
@@ -27,11 +25,17 @@ function addExceptionPathRow() {
     const row = table.insertRow();
 
     row.insertCell(0).innerHTML = '';
-    row.insertCell(1).innerHTML = '<textarea name="actor_step" rows="2"></textarea>';
-    row.insertCell(2).innerHTML = '<textarea name="system_step" rows="2"></textarea>';
+    row.insertCell(1).innerHTML = '<textarea name="exception_actor_step[]" rows="2"></textarea>';
+    row.insertCell(2).innerHTML = '<textarea name="exception_system_step[]" rows="2"></textarea>';
 
     document.getElementById('deleteExceptionRow').style.display = 'inline-block';
 }
+
+// Event Listeners untuk tombol tambah baris
+document.getElementById('addBasicStepButton').addEventListener('click', addBasicPathRow);
+document.getElementById('addAlternativeStepButton').addEventListener('click', addAlternativePathRow);
+document.getElementById('addExceptionStepButton').addEventListener('click', addExceptionPathRow);
+
 
 // Event listener untuk ikon delete Basic Path
 document.getElementById('deleteBasicRow').addEventListener('click', function () {
@@ -65,16 +69,16 @@ document.getElementById('deleteExceptionRow').addEventListener('click', function
         }
     }
 });
-// Event Listeners untuk tombol tambah baris
-document.getElementById('addBasicStepButton').addEventListener('click', addBasicPathRow);
-document.getElementById('addAlternativeStepButton').addEventListener('click', addAlternativePathRow);
-document.getElementById('addExceptionStepButton').addEventListener('click', addExceptionPathRow);
+// // Event Listeners untuk tombol tambah baris
+// document.getElementById('addBasicStepButton').addEventListener('click', addBasicPathRow);
+// document.getElementById('addAlternativeStepButton').addEventListener('click', addAlternativePathRow);
+// document.getElementById('addExceptionStepButton').addEventListener('click', addExceptionPathRow);
 
 
 document.getElementById('submitbutton').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const formData = new FFormData(document.getElementById('useCaseForm'));
+    const formData = new FormData(document.getElementById('useCaseForm'));
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     let valid = validateSteps();
@@ -148,4 +152,3 @@ form.addEventListener('submit', function (event) {
         event.preventDefault();  // Prevent form submission
     }
 });
-

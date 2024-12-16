@@ -1,0 +1,6 @@
+@startuml
+        actor customer
+        boundary login page
+        controller login controller
+        entity user database
+        @enduml

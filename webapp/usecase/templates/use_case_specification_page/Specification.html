@@ -50,28 +50,28 @@
         <h2 class="h2-spec">User Input  </h2>
 
         <div class="container-spec">
-            <form id="use-case-form" action="{% url 'save_specification' %}" method="post">
+            <form id="useCaseForm" action="{% url 'save_specification' %}" method="post">
                 {% csrf_token %}
                 <table class="main-spec">
                     <tr>
                         <td>Use Case Name</td>
-                        <td><input type="text" placeholder="Enter the Use Case Name" name="use_case_name"></td>
+                        <td><input type="text" placeholder="Enter the Use Case Name" name="use_case_name" class="required-field"></td>
                     </tr>
                     <tr>
                         <td>Actor</td>
-                        <td><input type="text" placeholder="Enter the Actor Name" name="actor"></td>
+                        <td><input type="text" placeholder="Enter the Actor Name" name="actor" class="required-field"></td>
                     </tr>
                     <tr>
                         <td>Summary Description</td>
-                        <td><textarea placeholder="Enter the Summary Description" name="summary_description" rows="4"></textarea></td>
+                        <td><textarea placeholder="Enter the Summary Description" name="summary_description" rows="4" class="required-field"></textarea></td>
                     </tr>
                     <tr>
                         <td>Pre-Conditions</td>
-                        <td><textarea placeholder="Enter the Pre-Conditions" name="pre_conditions" rows="4"></textarea></td>
+                        <td><textarea placeholder="Enter the Pre-Conditions" name="pre_conditions" rows="4" class="required-field"></textarea></td>
                     </tr>
                     <tr>
                         <td>Post-Conditions</td>
-                        <td><textarea placeholder="Enter the Post-Conditions" name="post_conditions" rows="4"></textarea></td>
+                        <td><textarea placeholder="Enter the Post-Conditions" name="post_conditions" rows="4" class="required-field"></textarea></td>
                     </tr>
                 </table>
 

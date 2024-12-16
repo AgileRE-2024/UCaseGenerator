@@ -1,9 +1,21 @@
 let classCounter = 1;
 
+// Fungsi untuk mengambil CSRF token dari cookie
+function getCSRFToken() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+        if (cookie.trim().startsWith('csrftoken=')) {
+            csrfToken = cookie.trim().substring('csrftoken='.length);
+        }
+    });
+    return csrfToken;
+}
+
 function addClassSection() {
     const classContainer = document.getElementById("class-container");
 
-    // Create a new class section
+    // Buat section untuk class baru
     const classSection = document.createElement("section");
     classSection.classList.add("class-section");
     classSection.innerHTML = `
@@ -31,36 +43,36 @@ function addClassSection() {
         </div>
     `;
 
-    // Add the new class section to the container
+    // Tambahkan section baru ke dalam container
     classContainer.appendChild(classSection);
 
-    // Add delete button only if this is not the first class
+    // Tambahkan tombol hapus untuk class kecuali class pertama
     if (classCounter > 1) {
         const deleteButton = document.createElement("button");
         deleteButton.classList.add("delete-btn");
-        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Trash can icon
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
         deleteButton.onclick = () => deleteClassSection(deleteButton);
         classSection.appendChild(deleteButton);
     }
 
-    // Update the "+" button to only be at the bottom
-    updateAddClassButton();
-
-    // Add the "+" buttons for attribute and operation in the new class
+    // Tambahkan tombol "+" untuk attribute dan operation
     addAttributeButton(classSection.querySelector(".attributes-container"));
     addOperationButton(classSection.querySelector(".operations-container"));
+
+    // Perbarui tombol "+" untuk class
+    updateAddClassButton();
 
     classCounter++;
 }
 
 function deleteClassSection(button) {
     const classSection = button.closest(".class-section");
-    classSection.remove(); // Remove class section
+    classSection.remove(); // Hapus section class
 
-    // Update class numbers after deletion
+    // Perbarui nomor class setelah penghapusan
     updateClassNumbers();
 
-    // Update "+" button if needed
+    // Perbarui tombol "+"
     updateAddClassButton();
 }
 
@@ -72,14 +84,14 @@ function updateClassNumbers() {
         const inputBox = section.querySelector("input[type='text']");
         inputBox.placeholder = `Input class name ${index + 1}`;
     });
-    classCounter = classSections.length + 1; // Update the global classCounter to reflect the current count
+    classCounter = classSections.length + 1; // Perbarui counter global
 }
 
 function updateAddClassButton() {
-    // Remove all existing "+" buttons
+    // Hapus semua tombol "+"
     document.querySelectorAll(".add-class-btn").forEach(btn => btn.remove());
 
-    // Add "+" button only to the last class
+    // Tambahkan tombol "+" hanya pada class terakhir
     const classContainer = document.getElementById("class-container");
     const lastClassSection = classContainer.lastElementChild;
 
@@ -92,9 +104,31 @@ function updateAddClassButton() {
     }
 }
 
-function addAttribute(button) {
-    const attributesContainer = button.closest(".attributes-container");
+function addAttributeButton(container) {
+    // Pastikan hanya ada satu tombol "+" di dalam container
+    let addButton = container.querySelector(".add-attribute-btn");
+    if (!addButton) {
+        addButton = document.createElement("button");
+        addButton.classList.add("add-btn", "add-attribute-btn");
+        addButton.innerText = "+";
+        addButton.onclick = () => addAttribute(container); // Panggil fungsi tambah attribute
+        container.appendChild(addButton);
+    }
+}
 
+function addOperationButton(container) {
+    // Pastikan hanya ada satu tombol "+" di dalam container
+    let addButton = container.querySelector(".add-operation-btn");
+    if (!addButton) {
+        addButton = document.createElement("button");
+        addButton.classList.add("add-btn", "add-operation-btn");
+        addButton.innerText = "+";
+        addButton.onclick = () => addOperation(container); // Panggil fungsi tambah operation
+        container.appendChild(addButton);
+    }
+}
+
+function addAttribute(container) {
     const newAttributeGroup = document.createElement("div");
     newAttributeGroup.classList.add("attribute-group");
 
@@ -104,30 +138,54 @@ function addAttribute(button) {
 
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("delete-attr-btn");
-    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Trash can icon
-    deleteButton.onclick = () => deleteAttribute(deleteButton);
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteButton.onclick = () => {
+        deleteAttribute(deleteButton);
+        updateAttributeNumbers(container);
+    };
 
     newAttributeGroup.appendChild(newAttributeInput);
     newAttributeGroup.appendChild(deleteButton);
-    attributesContainer.appendChild(newAttributeGroup);
+    container.insertBefore(newAttributeGroup, container.querySelector(".add-attribute-btn"));
 
-    // Update attribute numbering after addition
-    updateAttributeNumbers(attributesContainer);
+    updateAttributeNumbers(container);
+}
 
-    // Ensure "+" button is at the bottom
-    addAttributeButton(attributesContainer);
+function addOperation(container) {
+    const newOperationGroup = document.createElement("div");
+    newOperationGroup.classList.add("operation-group");
+
+    const newOperationInput = document.createElement("input");
+    newOperationInput.type = "text";
+    newOperationInput.classList.add("input-box");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete-op-btn");
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteButton.onclick = () => {
+        deleteOperation(deleteButton);
+        updateOperationNumbers(container);
+    };
+
+    newOperationGroup.appendChild(newOperationInput);
+    newOperationGroup.appendChild(deleteButton);
+    container.insertBefore(newOperationGroup, container.querySelector(".add-operation-btn"));
+
+    updateOperationNumbers(container);
 }
 
 function deleteAttribute(button) {
     const attributeGroup = button.closest(".attribute-group");
     const attributesContainer = button.closest(".attributes-container");
-    attributeGroup.remove(); // Remove the attribute input field
-
-    // Immediately update numbers without waiting for "+" button
+    attributeGroup.remove();
     updateAttributeNumbers(attributesContainer);
+}
 
-    // Ensure "+" button is placed at the bottom
-    addAttributeButton(attributesContainer);
+function deleteOperation(button) {
+    const operationGroup = button.closest(".operation-group");
+    const operationsContainer = button.closest(".operations-container");
+    operationGroup.remove();
+    updateOperationNumbers(operationsContainer);
 }
 
 function updateAttributeNumbers(container) {
@@ -138,44 +196,6 @@ function updateAttributeNumbers(container) {
     });
 }
 
-function addOperation(button) {
-    const operationsContainer = button.closest(".operations-container");
-
-    const newOperationGroup = document.createElement("div");
-    newOperationGroup.classList.add("operation-group");
-
-    const newOperationInput = document.createElement("input");
-    newOperationInput.type = "text";
-    newOperationInput.classList.add("input-box");
-
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("delete-op-btn");
-    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Trash can icon
-    deleteButton.onclick = () => deleteOperation(deleteButton);
-
-    newOperationGroup.appendChild(newOperationInput);
-    newOperationGroup.appendChild(deleteButton);
-    operationsContainer.appendChild(newOperationGroup);
-
-    // Update operation numbering after addition
-    updateOperationNumbers(operationsContainer);
-
-    // Ensure "+" button is at the bottom
-    addOperationButton(operationsContainer);
-}
-
-function deleteOperation(button) {
-    const operationGroup = button.closest(".operation-group");
-    const operationsContainer = button.closest(".operations-container");
-    operationGroup.remove(); // Remove the operation input field
-
-    // Immediately update numbers without waiting for "+" button
-    updateOperationNumbers(operationsContainer);
-
-    // Ensure "+" button is placed at the bottom
-    addOperationButton(operationsContainer);
-}
-
 function updateOperationNumbers(container) {
     const operationGroups = container.querySelectorAll(".operation-group");
     operationGroups.forEach((group, index) => {
@@ -184,135 +204,73 @@ function updateOperationNumbers(container) {
     });
 }
 
-function addAttributeButton(container) {
-    // Remove any existing "+" buttons
-    const existingButton = container.querySelector(".add-btn");
-    if (existingButton) {
-        existingButton.remove();
-    }
+// Fungsi untuk memperbarui dropdown kelas
+function updateDropdowns(classes) {
+    const classStartDropdown = document.getElementById("class-start");
+    const classEndDropdown = document.getElementById("class-end");
 
-    const addButton = document.createElement("button");
-    addButton.classList.add("add-btn");
-    addButton.innerText = "+";
-    addButton.onclick = () => addAttribute(addButton);
+    // Kosongkan dropdown terlebih dahulu
+    classStartDropdown.innerHTML = '<option value="">Choose class</option>';
+    classEndDropdown.innerHTML = '<option value="">Choose class</option>';
 
-    container.appendChild(addButton);
-}
+    // Tambahkan opsi baru
+    classes.forEach(cls => {
+        const optionStart = document.createElement("option");
+        optionStart.value = cls.id; // ID class
+        optionStart.textContent = cls.name; // Nama class
 
-function addOperationButton(container) {
-    // Remove any existing "+" buttons
-    const existingButton = container.querySelector(".add-btn");
-    if (existingButton) {
-        existingButton.remove();
-    }
+        // Tambahkan ke dropdown Class Start
+        classStartDropdown.appendChild(optionStart);
 
-    const addButton = document.createElement("button");
-    addButton.classList.add("add-btn");
-    addButton.innerText = "+";
-    addButton.onclick = () => addOperation(addButton);
-
-    container.appendChild(addButton);
+        // Clone dan tambahkan ke dropdown Class End
+        const optionEnd = optionStart.cloneNode(true);
+        classEndDropdown.appendChild(optionEnd);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    addClassSection(); // Automatically add the first class box
-    document.querySelector(".save-btn").addEventListener("click", () => {
-        alert("Class data saved!");
+    addClassSection(); // Tambahkan class pertama
+
+    document.querySelector(".save-btn").addEventListener("click", function () {
+        const classesData = [];
+        const connectionsData = [];
+
+        document.querySelectorAll(".class-section").forEach(classSection => {
+            const className = classSection.querySelector("input[type='text']").value;
+            const attributes = [];
+            const operations = [];
+
+            classSection.querySelectorAll(".attribute-group input").forEach(input => {
+                attributes.push(input.value);
+            });
+
+            classSection.querySelectorAll(".operation-group input").forEach(input => {
+                operations.push(input.value);
+            });
+
+            classesData.push({
+                name: className,
+                attributes: attributes,
+                operations: operations
+            });
+        });
+
+        fetch('/save_data/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify({ classes: classesData, connections: connectionsData }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert("Data berhasil disimpan!");
+                updateDropdowns(data.classes); // Update dropdown dengan data kelas yang baru
+            })
+            .catch(error => {
+                console.error("Error saat menyimpan data:", error);
+                alert("Gagal menyimpan data.");
+            });
     });
-});
-
-let connectionCounter = 1;
-
-function addConnection() {
-    const connectionsWrapper = document.getElementById("connections-wrapper");
-
-    // Buat container connection baru
-    const newConnectionContainer = document.createElement("div");
-    newConnectionContainer.classList.add("connection-container");
-    newConnectionContainer.innerHTML = `
-        <h3>Connection ${connectionCounter}:</h3>
-        <label>Path Name</label>
-        <input type="text" placeholder="input path name" class="input-box">
-        
-        <label>Relation</label>
-        <select class="input-box">
-            <option>Choose relation</option>
-        </select>
-        
-        <div class="class-selection">
-            <label>Class Start</label>
-            <select class="input-box">
-                <option>Choose class</option>
-            </select>
-            
-            <label>Class End</label>
-            <select class="input-box">
-                <option>Choose class</option>
-            </select>
-        </div>
-        
-        <div class="relation-reverse">
-            <label>Relation reverse</label>
-            <select class="input-box">
-                <option>Choose reverse relation</option>
-            </select>
-        </div>
-    `;
-
-    // Tambahkan tombol delete
-    // Tambahkan tombol delete dengan ikon yang sama seperti di class container
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("delete-connection-btn");
-    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Ikon Font Awesome untuk tempat sampah
-    deleteBtn.onclick = () => deleteConnection(newConnectionContainer);
-    newConnectionContainer.appendChild(deleteBtn);
-
-
-    // Tambahkan tombol + hanya di container connection paling bawah
-    const addConnectionBtn = document.createElement("button");
-    addConnectionBtn.classList.add("add-connection-btn");
-    addConnectionBtn.textContent = "+";
-    addConnectionBtn.onclick = addConnection;
-    newConnectionContainer.appendChild(addConnectionBtn);
-
-    // Hapus tombol + dari connection sebelumnya
-    const previousConnection = document.querySelector(".connection-container:last-child .add-connection-btn");
-    if (previousConnection) previousConnection.remove();
-
-    connectionsWrapper.appendChild(newConnectionContainer);
-
-    // Perbarui penomoran
-    updateConnectionNumbers();
-}
-
-function deleteConnection(connectionElement) {
-    connectionElement.remove();
-
-    // Perbarui penomoran
-    updateConnectionNumbers();
-}
-
-function updateConnectionNumbers() {
-    const connections = document.querySelectorAll(".connection-container");
-    connectionCounter = 1;
-
-    connections.forEach((connection, index) => {
-        connection.id = `connection-${index + 1}`;
-        connection.querySelector("h3").textContent = `Connection ${index + 1}:`;
-    });
-
-    // Pastikan hanya connection paling bawah yang memiliki tombol +
-    const lastConnection = document.querySelector(".connection-container:last-child");
-    if (lastConnection && !lastConnection.querySelector(".add-connection-btn")) {
-        const addConnectionBtn = document.createElement("button");
-        addConnectionBtn.classList.add("add-connection-btn");
-        addConnectionBtn.textContent = "+";
-        addConnectionBtn.onclick = addConnection;
-        lastConnection.appendChild(addConnectionBtn);
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const initialAddConnectionBtn = document.querySelector(".add-connection-btn");
-    initialAddConnectionBtn.addEventListener("click", addConnection);
 });
